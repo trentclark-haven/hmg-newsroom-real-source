@@ -19,7 +19,10 @@ export interface OutputHistoryEntry {
     | "caption-plan"
     | "thumbnail-brief"
     | "edit-brief"
-    | "max-cro-brief";
+    | "max-cro-brief"
+    | "max-daily-money-brief"
+    | "max-follow-up"
+    | "max-revenue-package";
   createdAt: number;
   prompt: string;
   role?: string;

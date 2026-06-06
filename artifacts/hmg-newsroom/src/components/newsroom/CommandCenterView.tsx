@@ -174,6 +174,113 @@ function MaxCROStrip({ onOpen }: { onOpen?: () => void }) {
   );
 }
 
+function MaxRevenueCard({ onOpen }: { onOpen?: () => void }) {
+  const [stats, setStats] = React.useState({
+    total: 0,
+    priority: 0,
+    followUps: 0,
+    ignored: 0,
+    savedBriefs: 0,
+    topLabel: "—",
+    topSource: "—",
+  });
+
+  React.useEffect(() => {
+    function refresh() {
+      try {
+        const raw = window.localStorage.getItem("hmg-newsroom-max-cro-inbox-v1");
+        const items: Array<{ status: string; score?: { label?: string; moneyMoveScore?: number } | null; sourceText?: string }> = raw ? (JSON.parse(raw) as typeof items) : [];
+        const priority = items.filter((i) =>
+          ["Max Review Drafted", "Founder Review Required"].includes(i.status)
+        ).length;
+        const followUps = items.filter((i) => i.status === "Relationship Follow-Up Needed").length;
+        const ignored = items.filter((i) => i.status === "Ignore / No Money Move").length;
+        const saved = items.filter((i) => i.status === "Saved to Output History").length;
+        const withScore = items
+          .filter((i) => i.score && i.score.moneyMoveScore !== undefined)
+          .sort((a, b) => (b.score?.moneyMoveScore ?? 0) - (a.score?.moneyMoveScore ?? 0));
+        const top = withScore[0];
+        setStats({
+          total: items.length,
+          priority,
+          followUps,
+          ignored,
+          savedBriefs: saved,
+          topLabel: top?.score?.label ?? (items.length ? "Pending review" : "—"),
+          topSource: top?.sourceText ? (top.sourceText.length > 55 ? `${top.sourceText.slice(0, 52)}…` : top.sourceText) : (items.length ? "Submit source to Max" : "—"),
+        });
+      } catch {
+        /* ignore */
+      }
+    }
+    refresh();
+    const id = window.setInterval(refresh, 10_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <section className="hmg-paper-panel mt-3 p-4" data-testid="max-revenue-card">
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-start gap-3">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-white" style={{ background: "#059669" }}>
+            <TrendingUp className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: "#059669" }}>
+              Max Revenue State — Local CRO Review
+            </p>
+            <p className="text-sm font-bold leading-tight text-foreground">
+              {stats.total === 0
+                ? "No sources in Max yet. Open Max CRO Inbox to begin."
+                : `${stats.total} source${stats.total === 1 ? "" : "s"} in Max · ${stats.priority} priority move${stats.priority === 1 ? "" : "s"}`}
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onOpen}
+          className="shrink-0 text-[10px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-lg border border-emerald-500/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/10 transition-colors"
+        >
+          Open War Room
+        </button>
+      </div>
+
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-3">
+        {[
+          { label: "Priority Moves", value: stats.priority, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-500/10 border-emerald-400/30" },
+          { label: "Follow-Ups", value: stats.followUps, color: "text-violet-600 dark:text-violet-400", bg: "bg-violet-500/10 border-violet-400/30" },
+          { label: "Ignored", value: stats.ignored, color: "text-muted-foreground", bg: "bg-secondary border-border" },
+          { label: "Saved Briefs", value: stats.savedBriefs, color: "text-sky-600 dark:text-sky-400", bg: "bg-sky-500/10 border-sky-400/30" },
+          { label: "Total Sources", value: stats.total, color: "text-foreground", bg: "bg-card border-border" },
+        ].map(({ label, value, color, bg }) => (
+          <div key={label} className={`rounded-lg border px-2 py-2 text-center ${bg}`}>
+            <div className={`text-lg font-black ${color}`}>{value}</div>
+            <div className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground mt-0.5 leading-tight">{label}</div>
+          </div>
+        ))}
+      </div>
+
+      {stats.total > 0 && (
+        <div className="rounded-lg border border-border/40 bg-card/50 px-3 py-2.5">
+          <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mb-1">
+            Highest Current Money Move
+          </p>
+          <p className="text-[11px] font-bold text-foreground leading-snug">{stats.topSource}</p>
+          <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold mt-0.5">{stats.topLabel}</p>
+        </div>
+      )}
+
+      <div className="flex flex-wrap gap-1 mt-2.5">
+        {["Local CRO Review", "No Outreach Sent", "No CRM Connected", "Founder Review Required"].map((t) => (
+          <span key={t} className="text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-border/50 bg-secondary/60 text-muted-foreground">
+            {t}
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ArtbotEditorialStrip({ onOpen }: { onOpen?: () => void }) {
   return (
     <section className="hmg-paper-panel mt-3 p-4" data-testid="artbot-editorial-strip">
@@ -2721,6 +2828,7 @@ export function CommandCenterView({ onNavigate }: CommandCenterViewProps = {}) {
 
       <AskMaxStrip onOpen={() => onNavigate?.("sales")} />
       <MaxCROStrip onOpen={() => onNavigate?.("maxcro")} />
+      <MaxRevenueCard onOpen={() => onNavigate?.("maxcro")} />
       <ArtbotEditorialStrip onOpen={() => onNavigate?.("newsroom")} />
       <FounderKBStrip onOpen={() => onNavigate?.("founderkb")} />
 

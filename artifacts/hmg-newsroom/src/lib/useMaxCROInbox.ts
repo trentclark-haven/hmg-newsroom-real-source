@@ -13,6 +13,7 @@ import {
   type MaxCROBrief,
   type CROStatus,
 } from "@/lib/hmg/haven-ai/maxCROEngine";
+import { computeRevenueScore } from "@/lib/hmg/haven-ai/maxRevenueScoring";
 
 const STORAGE_KEY = "hmg-newsroom-max-cro-inbox-v1";
 const MAX_ITEMS = 50;
@@ -54,6 +55,8 @@ export function submitSourceIntake(opts: {
     signals,
     status: isRevenue ? "Revenue Review Needed" : "Ignore / No Money Move",
     review: null,
+    score: null,
+    generatedPackage: null,
     silo,
     siloName,
     founderNote,
@@ -72,9 +75,11 @@ export function sendToMax(id: string): MaxCROBrief | null {
   if (idx === -1) return null;
   const item = list[idx];
   const review = runMaxCROReview(item.sourceText);
+  const score = computeRevenueScore(item.sourceText, item.signals);
   list[idx] = {
     ...item,
     review,
+    score,
     status: "Max Review Drafted",
   };
   writeStore(list);

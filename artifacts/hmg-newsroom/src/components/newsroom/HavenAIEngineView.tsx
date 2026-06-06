@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -19,6 +19,7 @@ import {
   ShieldCheck,
   Smartphone,
   Sparkles,
+  TrendingUp,
   Users,
   Video,
   Zap,
@@ -157,6 +158,97 @@ const NEEDS_BACKEND = [
   "True database-backed memory (currently localStorage)",
   "True multi-model routing and fallback logic",
 ];
+
+function MaxRevenueBrainSection({ onNavigate }: { onNavigate?: (v: View) => void }) {
+  const [croStats, setCroStats] = React.useState({
+    total: 0, priority: 0, followUps: 0, saved: 0,
+    hasMemory: false, memoryNote: "",
+  });
+
+  React.useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem("hmg-newsroom-max-cro-inbox-v1");
+      const items: Array<{ status: string }> = raw ? (JSON.parse(raw) as typeof items) : [];
+      const priority = items.filter((i) => ["Max Review Drafted", "Founder Review Required"].includes(i.status)).length;
+      const followUps = items.filter((i) => i.status === "Relationship Follow-Up Needed").length;
+      const saved = items.filter((i) => i.status === "Saved to Output History").length;
+
+      const kbRaw = window.localStorage.getItem("hmg-founder-knowledge-base-v1");
+      const kbItems: Array<{ type: string }> = kbRaw ? ((JSON.parse(kbRaw) as { items?: typeof kbItems })?.items ?? []) : [];
+      const hasMaxNotes = kbItems.some((i) => ["revenue-max-note", "sales-note", "relationship-note"].includes(i.type));
+      const memoryNote = hasMaxNotes
+        ? "Max Revenue Notes loaded — scoring engine has Founder context."
+        : "Max memory not loaded yet. Add founder revenue notes to sharpen recommendations.";
+
+      setCroStats({ total: items.length, priority, followUps, saved, hasMemory: hasMaxNotes, memoryNote });
+    } catch { /* ignore */ }
+  }, []);
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-2">
+        <div className="h-px flex-1 bg-border/40" />
+        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-400 px-2">
+          Max Revenue Brain
+        </span>
+        <div className="h-px flex-1 bg-border/40" />
+      </div>
+
+      <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/[0.05] p-4 flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+              <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+            </div>
+            <div>
+              <p className="text-[12px] font-black text-emerald-300">Max Revenue Brain</p>
+              <p className="text-[10px] text-emerald-400/70 font-semibold uppercase tracking-wide">Local CRO Review Active</p>
+            </div>
+          </div>
+          {onNavigate && (
+            <button
+              type="button"
+              onClick={() => onNavigate("maxcro")}
+              className="text-[10px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-lg border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/15 transition-colors flex items-center gap-1"
+            >
+              Open War Room <ExternalLink className="w-3 h-3" />
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {[
+            { label: "Max Reviews", value: croStats.total, color: "text-emerald-400" },
+            { label: "Priority Moves", value: croStats.priority, color: "text-emerald-300" },
+            { label: "Follow-Ups", value: croStats.followUps, color: "text-violet-400" },
+            { label: "Saved Briefs", value: croStats.saved, color: "text-sky-400" },
+          ].map(({ label, value, color }) => (
+            <div key={label} className="rounded-lg border border-emerald-500/20 bg-emerald-500/[0.06] px-3 py-2 text-center">
+              <div className={`text-lg font-black ${color}`}>{value}</div>
+              <div className="text-[9.5px] font-bold uppercase tracking-wide text-muted-foreground leading-tight mt-0.5">{label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className={`flex items-start gap-2 rounded-lg border px-3 py-2 ${croStats.hasMemory ? "border-emerald-500/30 bg-emerald-500/[0.06]" : "border-amber-500/30 bg-amber-500/[0.06]"}`}>
+          <Brain className={`w-3.5 h-3.5 flex-shrink-0 mt-0.5 ${croStats.hasMemory ? "text-emerald-400" : "text-amber-400"}`} />
+          <p className={`text-[11px] leading-relaxed ${croStats.hasMemory ? "text-emerald-200/80" : "text-amber-200/80"}`}>
+            <strong className={croStats.hasMemory ? "text-emerald-300" : "text-amber-300"}>Max Memory: </strong>
+            {croStats.memoryNote}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-1.5">
+          {["Local CRO Review", "No CRM Connected", "No Outreach Sent", "Founder Review Required", "Future Relationship Database Hook Pending"].map((t) => (
+            <span key={t} className="text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 text-emerald-400/70">
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function HavenAIEngineView({
   onNavigate,
@@ -365,6 +457,9 @@ export function HavenAIEngineView({
           </div>
         </div>
       )}
+
+      {/* Section 01b — Max Revenue Brain */}
+      <MaxRevenueBrainSection onNavigate={onNavigate} />
 
       {/* Section 1 — Local Brain Status */}
       <div className="flex flex-col gap-3">

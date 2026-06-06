@@ -12,6 +12,8 @@
  *   - No CRM Connected
  *   - Future Relationship Database Hook Pending
  */
+import type { RevenueScore } from "./maxRevenueScoring";
+import type { ContentPackage } from "./maxContentPackages";
 
 export const CRO_REVENUE_KEYWORDS = [
   "sponsor",
@@ -85,6 +87,8 @@ export interface MaxCROBrief {
   signals: string[];
   status: CROStatus;
   review: CROReview | null;
+  score: RevenueScore | null;
+  generatedPackage: ContentPackage | null;
   silo: string;
   siloName: string;
   founderNote: string;

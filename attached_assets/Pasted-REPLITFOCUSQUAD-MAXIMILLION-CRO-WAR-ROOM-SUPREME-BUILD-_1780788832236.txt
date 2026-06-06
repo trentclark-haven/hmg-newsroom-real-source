@@ -1,0 +1,502 @@
+REPLITFOCUSQUAD — MAXIMILLION CRO WAR ROOM SUPREME BUILD PASS
+
+You already completed the first Max CRO Intelligence Boost.
+
+Now build the next full-strength Max CRO layer inside the real HMG Newsroom source.
+
+Do not create a new app.
+Do not create a shell.
+Do not overwrite existing Operator #6 work.
+Do not fake AI.
+Do not fake CRM.
+Do not fake sponsor contacts.
+Do not fake outreach.
+Do not fake emails.
+Do not fake revenue.
+Do not fake deals.
+Do not fake backend success.
+
+Max is the CRO / Founder OS / business intelligence layer.
+
+Max is NOT:
+- article editor
+- graphics tool
+- WebEdit
+- Social Factory
+- ARTBOT
+- fake CRM
+- fake email automation
+- fake sponsor database
+
+Current Max foundation exists:
+- src/lib/hmg/haven-ai/maxCROEngine.ts
+- src/lib/useMaxCROInbox.ts
+- src/components/newsroom/MaxCROInboxView.tsx
+- Output History kind: max-cro-brief
+- Command Center Max strip
+- maxcro route/view
+
+Build on top of that.
+
+====================================================
+TASK 1 — CHECKPOINT FIRST
+====================================================
+
+Before coding, create a clean checkpoint archive:
+
+hmg-newsroom-max-cro-before-war-room-2026-06-06.tar.gz
+
+Archive rules:
+- no node_modules
+- no .git
+- no old archives
+- no screenshots
+- no secrets
+
+Then proceed.
+
+====================================================
+TASK 2 — MAX REVENUE SCORE SYSTEM
+====================================================
+
+Create a deterministic revenue scoring engine.
+
+Suggested file:
+src/lib/hmg/haven-ai/maxRevenueScoring.ts
+
+For every Max CRO item, calculate:
+
+1. Audience Fit Score
+Does this content fit an HMG vertical audience?
+
+2. Sponsor Fit Score
+Does it suggest a brand/category that could sponsor?
+
+3. Relationship Value Score
+Does it involve someone worth following up with?
+
+4. Urgency Score
+Is this time-sensitive?
+
+5. Repeatable Package Score
+Can this become a repeatable sales package?
+
+6. Reputation Safety Score
+Is it clean enough to pitch without looking corny, desperate, or off-brand?
+
+7. Founder Effort Score
+How much work would this require from the Founder?
+
+8. Money Move Score
+Overall score from 0–100.
+
+Labels:
+- No Money Move
+- Light Opportunity
+- Real Opportunity
+- Priority Revenue Move
+- Founder-Level Deal Signal
+
+Do not fake revenue numbers.
+Do not estimate dollars unless clearly labeled as manual hypothetical.
+
+====================================================
+TASK 3 — MAX WAR ROOM DASHBOARD
+====================================================
+
+Upgrade MaxCROInboxView into a stronger dashboard with tabs:
+
+1. Revenue Inbox
+All incoming Max CRO items.
+
+2. Priority Money Moves
+Only high-scoring items.
+
+3. Relationship Follow-Ups
+Items that need a call, DM, email, manager/publicist follow-up, sponsor follow-up, or warm intro.
+
+4. Sponsor Angles
+Grouped by advertiser/category fit.
+
+5. Offline Money Plays
+Events, interviews, local sponsorships, live activations, consulting, media packages, merch, panels, pop-ups.
+
+6. Ignore / Not Worth It
+Items Max says not to chase.
+
+7. Founder Review
+Items needing Founder approval.
+
+Each card should show:
+- source title
+- brand/silo
+- score
+- status
+- sponsor angle
+- relationship follow-up
+- founder next move
+- risk note
+- copy buttons
+- save buttons
+- mark follow-up
+- mark ignore
+- save to Output History
+
+====================================================
+TASK 4 — COMMAND CENTER MAX REVENUE CARD
+====================================================
+
+Add a Command Center card/panel for Max Revenue.
+
+It should show:
+- Total Max reviews
+- Priority money moves
+- Follow-ups needed
+- Ignored/no-money items
+- Saved revenue briefs
+- Highest current money move
+- One clear Founder action
+
+Button:
+Open Max War Room
+
+Do not make this redundant with the existing Max strip.
+The strip can stay as quick access.
+The new card should be a state summary.
+
+====================================================
+TASK 5 — MAX DAILY MONEY BRIEF
+====================================================
+
+Build a Daily Money Brief generator.
+
+Local deterministic only.
+
+It should summarize:
+- What Max sees today
+- Best sponsor angle
+- Best relationship follow-up
+- Best content-to-revenue move
+- Best offline money play
+- What to ignore
+- One Founder next move
+- Risk/reputation warning
+
+Actions:
+- Copy Daily Money Brief
+- Save Daily Money Brief to Output History
+- Mark brief reviewed
+
+Output kind:
+max-daily-money-brief
+
+Add to useOutputHistory and OutputHistory labels/icons if safe.
+
+====================================================
+TASK 6 — RELATIONSHIP FOLLOW-UP TRACKER
+====================================================
+
+Create local relationship follow-up tracking inside Max.
+
+Fields:
+- person/company
+- relationship type
+- reason for follow-up
+- related source/content
+- suggested message angle
+- status
+  - Needs Follow-Up
+  - Founder Review
+  - Follow-Up Done Manually
+  - Waiting
+  - Ignore
+- notes
+- createdAt
+- updatedAt
+
+Actions:
+- Add Follow-Up
+- Mark Done Manually
+- Mark Waiting
+- Mark Ignore
+- Copy Follow-Up Brief
+- Save to Output History
+
+Truth labels:
+- Manual Follow-Up Only
+- No Email Sent
+- No CRM Connected
+
+====================================================
+TASK 7 — SPONSOR CATEGORY MAP
+====================================================
+
+Create deterministic sponsor category suggestions.
+
+Suggested categories:
+- music technology
+- headphones/audio gear
+- streetwear
+- sneakers
+- sports apparel
+- cannabis
+- fitness/wellness
+- alcohol alternative / sober lifestyle
+- local restaurants
+- venues
+- festivals/events
+- gaming
+- creator tools
+- cameras/video gear
+- cars/auto lifestyle
+- streaming/entertainment
+- education/workforce
+- veteran-owned businesses
+- Black-owned businesses
+- local LA businesses
+
+For each category:
+- best HMG verticals
+- content fit
+- pitch angle
+- risk notes
+- examples of what not to say
+
+No real sponsor contact claims.
+No fake brand relationships.
+
+====================================================
+TASK 8 — CONTENT PACKAGE BUILDER
+====================================================
+
+Max should turn a content idea into a sales package.
+
+Create package types:
+
+1. Sponsored Article Package
+2. Social Clip Package
+3. Interview Package
+4. Event Coverage Package
+5. Local Business Spotlight
+6. Founder Commentary Package
+7. Multi-Vertical Campaign
+8. WebEdit + Social Factory Bundle
+9. WordPress + Newsletter Bundle
+10. SportsHaven / MusicHaven / HipHopHaven Vertical Package
+
+Each package should include:
+- package name
+- what content gets produced
+- who it helps
+- why a sponsor would care
+- deliverables
+- founder work required
+- risk notes
+- copy pitch starter
+- what to avoid
+
+Actions:
+- Generate Package From Max Review
+- Copy Package
+- Save Package to Output History
+
+Output kind:
+max-revenue-package
+
+====================================================
+TASK 9 — MAX MEMORY HOOKS
+====================================================
+
+Add honest Max memory hooks.
+
+Max should look for local notes if available:
+- founder revenue notes
+- relationship notes
+- sponsor preferences
+- vertical priorities
+- no-go categories
+- pricing notes
+- past wins
+- ignored categories
+
+If not loaded, show:
+“Max memory not loaded yet. Add founder revenue notes to sharpen recommendations.”
+
+Do not fake memory.
+Do not invent relationships.
+
+====================================================
+TASK 10 — HAVEN AI ENGINE MAX SECTION
+====================================================
+
+Update HavenAIEngineView to show a clear Max section:
+
+Title:
+Max Revenue Brain
+
+Status:
+Local CRO Review Active
+
+Show:
+- Max reviews
+- priority money moves
+- follow-ups needed
+- Max memory status
+- Output History saves
+- Future relationship database hook pending
+
+Truth:
+- No CRM connected
+- No outreach sent
+- No fake sponsor contacts
+- Founder review required
+
+====================================================
+TASK 11 — OUTPUT HISTORY EXPANSION
+====================================================
+
+Add safe Output History support for:
+
+- max-cro-brief
+- max-daily-money-brief
+- max-follow-up
+- max-revenue-package
+
+Cards should support:
+- Copy Brief
+- Copy Follow-Up
+- Copy Package
+- Copy JSON
+- Restore/Open if safe
+
+Do not break existing kinds.
+
+====================================================
+TASK 12 — MAX FOUNDER COPY QUALITY
+====================================================
+
+Improve Max’s writing voice.
+
+Max should sound:
+- executive
+- sharp
+- media-savvy
+- calm under pressure
+- founder-first
+- not corny
+- not fake motivational
+- not generic business bro
+- not overpromising
+
+Use language like:
+- “This is worth a look.”
+- “Do not chase this unless…”
+- “The money move is…”
+- “The clean sponsor angle is…”
+- “This is a relationship play, not a content play.”
+- “Low effort, decent upside.”
+- “High upside, but Founder review first.”
+- “Ignore the noise here.”
+
+====================================================
+TASK 13 — FAKE-CLAIM GUARDRAILS
+====================================================
+
+Sweep all new Max surfaces.
+
+Forbidden claims:
+- email sent
+- CRM connected
+- sponsor contacted
+- deal created
+- revenue secured
+- outreach completed
+- automatic pipeline synced
+- live sponsor database
+- AI model generated if no model is wired
+
+Required labels:
+- Local CRO Review
+- Founder Review Required
+- No Outreach Sent
+- No CRM Connected
+- Manual Follow-Up Only
+- Future Relationship Database Hook Pending
+
+====================================================
+TASK 14 — DOCS
+====================================================
+
+Create:
+
+docs/HMG_NEWSROOM_MAX_CRO_WAR_ROOM_SUPREME_PASS.md
+
+Include:
+- files created
+- files edited
+- scoring engine
+- War Room tabs
+- Command Center card
+- Daily Money Brief
+- Relationship Follow-Up tracker
+- Sponsor Category Map
+- Content Package Builder
+- Output History integration
+- Haven AI integration
+- fake-claim sweep
+- what is real now
+- what is future backend
+- next handoff
+
+====================================================
+TASK 15 — VERIFY + ARCHIVE
+====================================================
+
+Run:
+pnpm typecheck
+pnpm build
+
+Create archive:
+
+hmg-newsroom-max-cro-war-room-supreme-pass-2026-06-06.tar.gz
+
+Archive rules:
+- no node_modules
+- no .git
+- no old archives
+- no screenshots
+- no secrets
+
+Integrity check.
+
+Final report:
+HMG NEWSROOM — MAX CRO WAR ROOM SUPREME PASS
+
+Include:
+- files created
+- files edited
+- Max Revenue Score status
+- War Room status
+- Command Center integration
+- Daily Money Brief status
+- Follow-Up Tracker status
+- Sponsor Category Map status
+- Content Package Builder status
+- Output History integration
+- Haven AI integration
+- fake-claim sweep
+- typecheck result
+- build result
+- archive path
+- archive size
+- archive integrity
+- remaining blockers
+
+NORTH STAR:
+Max should now feel like a real CRO cockpit inside HMG Newsroom.
+
+Not fake CRM.
+Not fake outreach.
+Not fake money.
+
+A real founder decision system for turning content into revenue opportunities.

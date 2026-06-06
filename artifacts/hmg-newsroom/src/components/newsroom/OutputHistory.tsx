@@ -202,6 +202,9 @@ const KIND_ICON: Record<OutputHistoryEntry["kind"], typeof Sparkles> = {
   "thumbnail-brief": ImageIcon,
   "edit-brief": Film,
   "max-cro-brief": Zap,
+  "max-daily-money-brief": BookMarked,
+  "max-follow-up": ScrollText,
+  "max-revenue-package": Megaphone,
 };
 
 const KIND_LABEL: Record<OutputHistoryEntry["kind"], string> = {
@@ -215,6 +218,9 @@ const KIND_LABEL: Record<OutputHistoryEntry["kind"], string> = {
   "thumbnail-brief": "Thumbnail",
   "edit-brief": "Edit Brief",
   "max-cro-brief": "Max CRO",
+  "max-daily-money-brief": "Daily Brief",
+  "max-follow-up": "Follow-Up",
+  "max-revenue-package": "Rev Package",
 };
 
 function EntryCard({
