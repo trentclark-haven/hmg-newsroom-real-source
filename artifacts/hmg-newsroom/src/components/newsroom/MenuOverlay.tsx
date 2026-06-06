@@ -29,6 +29,7 @@ import {
   BookMarked,
   FileText,
   Smartphone,
+  Inbox,
 } from "lucide-react";
 import { ROLES, ROLE_LABELS, orderForRole, useRolePreset } from "@/lib/role";
 import { useSafeMode } from "@/lib/safeMode";
@@ -59,7 +60,8 @@ export type View =
   | "artboteditorial"
   | "backendstatus"
   | "mobileappstatus"
-  | "sessionrecap";
+  | "sessionrecap"
+  | "maxcro";
 
 export interface MenuItem {
   id: View;
@@ -160,6 +162,13 @@ export const MENU_ITEMS: MenuItem[] = [
     description: "Saved outputs, Media Library, WordPress drafts",
     icon: ImageIcon,
     color: "#22D3EE",
+  },
+  {
+    id: "maxcro",
+    label: "Max CRO Inbox",
+    description: "Source Intake → Revenue signal detection → Max CRO review → Founder action",
+    icon: Inbox,
+    color: "#10B981",
   },
   {
     id: "sales",
@@ -277,7 +286,7 @@ export const MENU_SECTIONS: { label: string; hint: string; ids: View[] }[] = [
   {
     label: "Growth",
     hint: "Reach & optimization",
-    ids: ["seomaster", "clipbrand", "stationscheduler", "aistaff", "assignments"],
+    ids: ["seomaster", "clipbrand", "stationscheduler", "aistaff", "assignments", "maxcro"],
   },
   {
     label: "System & Setup",

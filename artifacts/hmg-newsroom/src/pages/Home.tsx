@@ -157,6 +157,11 @@ const SessionRecapView = lazy(() =>
     default: m.SessionRecapView,
   })),
 );
+const MaxCROInboxView = lazy(() =>
+  import("@/components/newsroom/MaxCROInboxView").then((m) => ({
+    default: m.MaxCROInboxView,
+  })),
+);
 
 function ViewSpinner() {
   return (
@@ -419,6 +424,7 @@ export default function Home() {
             {view === "backendstatus" && <BackendStatusView onNavigate={setView} />}
             {view === "mobileappstatus" && <MobileAppReadinessView />}
             {view === "sessionrecap" && <SessionRecapView onNavigate={setView} />}
+            {view === "maxcro" && <MaxCROInboxView />}
           </Suspense>
           </ErrorBoundary>
         )}

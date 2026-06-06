@@ -26,6 +26,7 @@ import {
   Download,
   HardDrive,
   ImageUp,
+  Inbox,
   Layers,
   LayoutDashboard,
   ListTodo,
@@ -131,6 +132,41 @@ function AskMaxStrip({ onOpen }: { onOpen?: () => void }) {
           className="hmg-primary-action bg-emerald-600 text-white"
         >
           Open Max
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function MaxCROStrip({ onOpen }: { onOpen?: () => void }) {
+  return (
+    <section className="hmg-paper-panel mt-3 p-4" data-testid="max-cro-strip">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl text-white" style={{ background: "#10B981" }}>
+            <Inbox className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.18em]" style={{ color: "#10B981" }}>
+              Max CRO Inbox — Source Intake
+            </p>
+            <h3 className="text-lg font-black leading-tight text-foreground">
+              Paste a source or tip. Max detects revenue signals and routes it.
+            </h3>
+            <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Sponsor angles · relationship follow-ups · content-to-revenue · offline money plays · founder next move.
+              Local CRO review — no fake outreach, no fake CRM.
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onOpen}
+          className="hmg-secondary-action"
+          style={{ borderColor: "#10B98133", color: "#10B981" }}
+        >
+          Open Max CRO Inbox
           <ArrowRight className="h-4 w-4" />
         </button>
       </div>
@@ -2684,6 +2720,7 @@ export function CommandCenterView({ onNavigate }: CommandCenterViewProps = {}) {
       </section>
 
       <AskMaxStrip onOpen={() => onNavigate?.("sales")} />
+      <MaxCROStrip onOpen={() => onNavigate?.("maxcro")} />
       <ArtbotEditorialStrip onOpen={() => onNavigate?.("newsroom")} />
       <FounderKBStrip onOpen={() => onNavigate?.("founderkb")} />
 

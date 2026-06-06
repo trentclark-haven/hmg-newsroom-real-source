@@ -1,0 +1,137 @@
+REPLITFOCUSTRES — MAX CRO INTELLIGENCE BOOST ADD-ON
+
+Add this to the Founder Voice Corpus + Source Intake pass.
+
+Max needs a serious CRO intelligence upgrade, but Max must stay in his lane.
+
+Max is:
+
+* Chief Revenue Officer
+* Founder OS business strategist
+* revenue operator
+* sponsor/partnership thinker
+* relationship follow-up tracker
+* offline money scout
+* content-to-revenue strategist
+
+Max is NOT:
+
+* an article editor
+* a graphics tool
+* WebEdit
+* Social Factory
+* ARTBOT
+* a fake CRM
+* a fake email sender
+* a fake outreach automation tool
+
+Build Max’s next intelligence layer around Source Intake and Agent Inbox.
+
+When a Source Intake item includes:
+
+* sponsor
+* brand
+* business
+* relationship
+* partnership
+* event
+* interview
+* artist/team/manager/publicist
+* product
+* venue
+* media opportunity
+* revenue angle
+* ad/sales potential
+
+Route it to Max as:
+
+“Revenue Review Needed”
+
+Create or extend Max logic to generate a local, deterministic CRO review with:
+
+1. Sponsor Angle
+   What brand/category might care about this content or audience?
+
+2. Relationship Follow-Up
+   Who might need a call, email, DM, or warm follow-up?
+
+3. Content-to-Revenue Move
+   How can this article/clip/social post become a sales asset?
+
+4. Brand Partnership Idea
+   What HMG vertical or advertiser category fits this?
+
+5. Offline Money Play
+   Could this become an event, interview package, local sponsorship, merch, consulting, live activation, or media package?
+
+6. What To Ignore
+   What is not worth chasing?
+
+7. Founder Next Move
+   One clear action for the Founder.
+
+8. Risk / Reputation Note
+   What could make the revenue play look corny, desperate, unsafe, or off-brand?
+
+Add statuses:
+
+* Revenue Review Needed
+* Max Review Drafted
+* Founder Review Required
+* Saved to Output History
+* Relationship Follow-Up Needed
+* Ignore / No Money Move
+
+Add actions:
+
+* Send to Max
+* Copy Max Revenue Brief
+* Save Max Revenue Brief
+* Save to Output History
+* Send back to Agent Inbox
+* Mark Follow-Up Needed
+* Mark Ignore
+
+Do not fake outreach.
+Do not fake email.
+Do not fake CRM.
+Do not fake sponsor contact data.
+Do not fake revenue numbers.
+Do not fake deal status.
+
+Truth labels:
+
+* Local CRO Review
+* Founder Review Required
+* No Outreach Sent
+* No CRM Connected
+* Future Relationship Database Hook Pending
+
+Integrate with:
+
+* Source Intake
+* Agent Inbox
+* Max / Maximillion
+* Command Center
+* Output History
+* Haven AI Engine
+
+Update docs:
+docs/HMG_NEWSROOM_REPLITFOCUSTRES_MAX_CRO_INTELLIGENCE_BOOST.md
+
+Run:
+
+* pnpm typecheck
+* pnpm build
+
+Final report must include:
+
+* files created
+* files edited
+* Max CRO routing status
+* Source Intake → Max status
+* Agent Inbox → Max status
+* Output History status
+* fake-claim sweep
+* typecheck result
+* build result

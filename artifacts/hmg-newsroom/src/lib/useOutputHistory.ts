@@ -18,7 +18,8 @@ export interface OutputHistoryEntry {
     | "social-video-draft"
     | "caption-plan"
     | "thumbnail-brief"
-    | "edit-brief";
+    | "edit-brief"
+    | "max-cro-brief";
   createdAt: number;
   prompt: string;
   role?: string;
