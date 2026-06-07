@@ -181,9 +181,12 @@ function MaxRevenueCard({ onOpen }: { onOpen?: () => void }) {
     followUps: 0,
     topSource: "",
     topDecision: "",
-    contextQuality: "Empty" as "Empty" | "Basic" | "Useful" | "Strong",
+    contextQuality: "Empty" as "Empty" | "Basic" | "Useful" | "Strong" | "Sharp",
     founderNextAction: "",
     moneyOrNoise: "",
+    bestRelationshipPlay: "",
+    bestPackageIdea: "",
+    whatToIgnore: "",
   });
 
   React.useEffect(() => {
@@ -211,7 +214,7 @@ function MaxRevenueCard({ onOpen }: { onOpen?: () => void }) {
             if (typeof ctx.pricingNotes === "string" && (ctx.pricingNotes as string).trim()) score += 15;
             if (typeof ctx.relationshipNotes === "string" && (ctx.relationshipNotes as string).trim()) score += 15;
             if (Array.isArray(ctx.pastWins) && (ctx.pastWins as string[]).length > 0) score += 10;
-            contextQuality = score >= 75 ? "Strong" : score >= 50 ? "Useful" : score >= 25 ? "Basic" : "Empty";
+            contextQuality = score >= 85 ? "Sharp" : score >= 65 ? "Strong" : score >= 40 ? "Useful" : score >= 20 ? "Basic" : "Empty";
           } catch { /* ignore */ }
         }
 
@@ -231,6 +234,13 @@ function MaxRevenueCard({ onOpen }: { onOpen?: () => void }) {
           ? "Send top sources through Max for a full review."
           : "Open War Room → Source Intake. Paste your first source.";
 
+        // Derive relationship, package, and ignore reads from reviewed items
+        type ReviewedItem = InboxItem & { review?: { relationshipFollowUp?: string; contentToRevenue?: string; whatToIgnore?: string } | null };
+        const reviewedItems = (items as ReviewedItem[]).filter((i) => i.review);
+        const relItem = reviewedItems.find((i) => i.review?.relationshipFollowUp && i.review.relationshipFollowUp.length > 10);
+        const pkgItem = reviewedItems.find((i) => i.review?.contentToRevenue && i.review.contentToRevenue.length > 10);
+        const ignoreItem = reviewedItems.find((i) => i.review?.whatToIgnore && i.review.whatToIgnore.length > 10);
+
         setData({
           total: items.length,
           priority,
@@ -240,6 +250,9 @@ function MaxRevenueCard({ onOpen }: { onOpen?: () => void }) {
           contextQuality,
           founderNextAction,
           moneyOrNoise,
+          bestRelationshipPlay: relItem?.review?.relationshipFollowUp?.slice(0, 120) ?? "",
+          bestPackageIdea: pkgItem?.review?.contentToRevenue?.slice(0, 120) ?? "",
+          whatToIgnore: ignoreItem?.review?.whatToIgnore?.slice(0, 80) ?? "",
         });
       } catch { /* ignore */ }
     }
@@ -253,6 +266,7 @@ function MaxRevenueCard({ onOpen }: { onOpen?: () => void }) {
     Basic: "text-amber-600 dark:text-amber-400",
     Useful: "text-sky-600 dark:text-sky-400",
     Strong: "text-emerald-600 dark:text-emerald-400",
+    Sharp: "text-emerald-400",
   };
 
   return (
@@ -299,6 +313,27 @@ function MaxRevenueCard({ onOpen }: { onOpen?: () => void }) {
           <p className="text-[9px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">Best Current Money Move</p>
           <p className="text-[11px] font-bold text-foreground leading-snug">{data.topSource}</p>
           {data.topDecision && <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold mt-0.5">{data.topDecision}</p>}
+        </div>
+      )}
+
+      {data.bestRelationshipPlay && (
+        <div className="rounded-lg border border-violet-400/20 bg-violet-500/[0.04] px-3 py-2 mb-2">
+          <p className="text-[9px] font-black uppercase tracking-wider text-violet-600 dark:text-violet-400 mb-0.5">Best Relationship Play</p>
+          <p className="text-[11px] text-foreground/80 leading-snug">{data.bestRelationshipPlay}</p>
+        </div>
+      )}
+
+      {data.bestPackageIdea && (
+        <div className="rounded-lg border border-sky-400/20 bg-sky-500/[0.04] px-3 py-2 mb-2">
+          <p className="text-[9px] font-black uppercase tracking-wider text-sky-600 dark:text-sky-400 mb-0.5">Best Package Idea</p>
+          <p className="text-[11px] text-foreground/80 leading-snug">{data.bestPackageIdea}</p>
+        </div>
+      )}
+
+      {data.whatToIgnore && (
+        <div className="rounded-lg border border-border/30 bg-secondary/30 px-3 py-2 mb-2">
+          <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mb-0.5">What to Ignore</p>
+          <p className="text-[11px] text-muted-foreground leading-snug">{data.whatToIgnore}</p>
         </div>
       )}
 

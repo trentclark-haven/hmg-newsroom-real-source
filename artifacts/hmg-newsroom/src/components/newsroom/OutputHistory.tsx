@@ -23,6 +23,7 @@ import {
 import { verticals } from "@/lib/mock-data";
 import {
   BookMarked,
+  Brain,
   Brush,
   Captions,
   Copy,
@@ -215,6 +216,9 @@ const KIND_ICON: Record<OutputHistoryEntry["kind"], typeof Sparkles> = {
   "max-executive-money-brief": Star,
   "max-content-to-money": FileText,
   "max-judgment": Zap,
+  "max-quick-read": Zap,
+  "max-founder-command": Brain,
+  "max-sports-read": TrendingUp,
 };
 
 const KIND_LABEL: Record<OutputHistoryEntry["kind"], string> = {
@@ -237,6 +241,9 @@ const KIND_LABEL: Record<OutputHistoryEntry["kind"], string> = {
   "max-executive-money-brief": "Exec Brief",
   "max-content-to-money": "Content → $",
   "max-judgment": "Judgment",
+  "max-quick-read": "Quick Read",
+  "max-founder-command": "Max Command",
+  "max-sports-read": "Sports Read",
 };
 
 function EntryCard({

@@ -28,7 +28,10 @@ export interface OutputHistoryEntry {
     | "max-buffett-filter"
     | "max-executive-money-brief"
     | "max-content-to-money"
-    | "max-judgment";
+    | "max-judgment"
+    | "max-quick-read"
+    | "max-founder-command"
+    | "max-sports-read";
   createdAt: number;
   prompt: string;
   role?: string;

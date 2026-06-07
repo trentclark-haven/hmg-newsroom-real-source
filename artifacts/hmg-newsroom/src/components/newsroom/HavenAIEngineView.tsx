@@ -162,7 +162,8 @@ const NEEDS_BACKEND = [
 function MaxRevenueBrainSection({ onNavigate }: { onNavigate?: (v: View) => void }) {
   const [croStats, setCroStats] = React.useState({
     total: 0, priority: 0, followUps: 0, saved: 0,
-    hasMemory: false, memoryNote: "",
+    quickReadsSaved: 0, commandsSaved: 0, contextQuality: "Empty" as "Empty" | "Basic" | "Useful" | "Strong" | "Sharp",
+    hasMemory: false,
   });
 
   React.useEffect(() => {
@@ -173,14 +174,31 @@ function MaxRevenueBrainSection({ onNavigate }: { onNavigate?: (v: View) => void
       const followUps = items.filter((i) => i.status === "Relationship Follow-Up Needed").length;
       const saved = items.filter((i) => i.status === "Saved to Output History").length;
 
-      const kbRaw = window.localStorage.getItem("hmg-founder-knowledge-base-v1");
-      const kbItems: Array<{ type: string }> = kbRaw ? ((JSON.parse(kbRaw) as { items?: typeof kbItems })?.items ?? []) : [];
-      const hasMaxNotes = kbItems.some((i) => ["revenue-max-note", "sales-note", "relationship-note"].includes(i.type));
-      const memoryNote = hasMaxNotes
-        ? "Max Revenue Notes loaded — scoring engine has Founder context."
-        : "Max memory not loaded yet. Add founder revenue notes to sharpen recommendations.";
+      // Output history for Max-specific kinds
+      const ohRaw = window.localStorage.getItem("hmg-newsroom-output-history-v2");
+      const ohItems: Array<{ kind: string }> = ohRaw ? (JSON.parse(ohRaw) as typeof ohItems) : [];
+      const quickReadsSaved = ohItems.filter((i) => i.kind === "max-quick-read").length;
+      const commandsSaved = ohItems.filter((i) => i.kind === "max-founder-command").length;
 
-      setCroStats({ total: items.length, priority, followUps, saved, hasMemory: hasMaxNotes, memoryNote });
+      // Context quality
+      const ctxRaw = window.localStorage.getItem("hmg-newsroom-max-founder-context-v1");
+      let contextQuality: typeof croStats.contextQuality = "Empty";
+      if (ctxRaw) {
+        try {
+          const ctx = JSON.parse(ctxRaw) as Record<string, unknown>;
+          let score = 0;
+          if (Array.isArray(ctx.preferredSponsorCategories) && (ctx.preferredSponsorCategories as string[]).length > 0) score += 15;
+          if (Array.isArray(ctx.noGoCategories) && (ctx.noGoCategories as string[]).length > 0) score += 12;
+          if (typeof ctx.pricingNotes === "string" && (ctx.pricingNotes as string).trim()) score += 12;
+          if (typeof ctx.relationshipNotes === "string" && (ctx.relationshipNotes as string).trim()) score += 10;
+          if (typeof ctx.moneyPhilosophy === "string" && (ctx.moneyPhilosophy as string).trim()) score += 8;
+          if (typeof ctx.reputationRules === "string" && (ctx.reputationRules as string).trim()) score += 8;
+          if (Array.isArray(ctx.pastWins) && (ctx.pastWins as string[]).length > 0) score += 5;
+          contextQuality = score >= 60 ? "Sharp" : score >= 45 ? "Strong" : score >= 30 ? "Useful" : score >= 15 ? "Basic" : "Empty";
+        } catch { /* ignore */ }
+      }
+
+      setCroStats({ total: items.length, priority, followUps, saved, quickReadsSaved, commandsSaved, contextQuality, hasMemory: Boolean(ctxRaw) });
     } catch { /* ignore */ }
   }, []);
 
@@ -216,15 +234,17 @@ function MaxRevenueBrainSection({ onNavigate }: { onNavigate?: (v: View) => void
           )}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {[
             { label: "Sources Reviewed", value: croStats.total, color: "text-emerald-400" },
             { label: "Priority Moves", value: croStats.priority, color: "text-emerald-300" },
             { label: "Follow-Ups", value: croStats.followUps, color: "text-violet-400" },
-            { label: "Saved Briefs", value: croStats.saved, color: "text-sky-400" },
+            { label: "Quick Reads Saved", value: croStats.quickReadsSaved, color: "text-sky-400" },
+            { label: "Commands Saved", value: croStats.commandsSaved, color: "text-amber-400" },
+            { label: "Context Quality", value: croStats.contextQuality, color: croStats.contextQuality === "Sharp" || croStats.contextQuality === "Strong" ? "text-emerald-400" : croStats.contextQuality === "Useful" ? "text-sky-400" : "text-muted-foreground" },
           ].map(({ label, value, color }) => (
             <div key={label} className="rounded-lg border border-emerald-500/20 bg-emerald-500/[0.06] px-3 py-2 text-center">
-              <div className={`text-lg font-black ${color}`}>{value}</div>
+              <div className={`text-sm font-black ${color}`}>{value}</div>
               <div className="text-[9.5px] font-bold uppercase tracking-wide text-muted-foreground leading-tight mt-0.5">{label}</div>
             </div>
           ))}
@@ -245,13 +265,14 @@ function MaxRevenueBrainSection({ onNavigate }: { onNavigate?: (v: View) => void
           ))}
         </div>
 
-        <div className={`flex items-start gap-2 rounded-lg border px-3 py-2 ${croStats.hasMemory ? "border-emerald-500/30 bg-emerald-500/[0.06]" : "border-amber-500/30 bg-amber-500/[0.06]"}`}>
-          <Brain className={`w-3.5 h-3.5 flex-shrink-0 mt-0.5 ${croStats.hasMemory ? "text-emerald-400" : "text-amber-400"}`} />
-          <p className={`text-[11px] leading-relaxed ${croStats.hasMemory ? "text-emerald-200/80" : "text-amber-200/80"}`}>
-            <strong className={croStats.hasMemory ? "text-emerald-300" : "text-amber-300"}>Founder Context: </strong>
-            {croStats.hasMemory
-              ? "Revenue notes loaded. Max uses Founder context to sharpen recommendations."
-              : "Founder context not added yet. Open Max War Room → Founder Context to sharpen recommendations."}
+        <div className={`flex items-start gap-2 rounded-lg border px-3 py-2 ${croStats.hasMemory && croStats.contextQuality !== "Empty" ? "border-emerald-500/30 bg-emerald-500/[0.06]" : "border-amber-500/30 bg-amber-500/[0.06]"}`}>
+          <Brain className={`w-3.5 h-3.5 flex-shrink-0 mt-0.5 ${croStats.hasMemory && croStats.contextQuality !== "Empty" ? "text-emerald-400" : "text-amber-400"}`} />
+          <p className={`text-[11px] leading-relaxed ${croStats.hasMemory && croStats.contextQuality !== "Empty" ? "text-emerald-200/80" : "text-amber-200/80"}`}>
+            <strong className={croStats.hasMemory && croStats.contextQuality !== "Empty" ? "text-emerald-300" : "text-amber-300"}>Founder Context ({croStats.contextQuality}): </strong>
+            {croStats.contextQuality === "Sharp" ? "Max context is sharp. Recommendations are precise and founder-native."
+              : croStats.contextQuality === "Strong" ? "Strong context loaded. Max recommendations are solid."
+              : croStats.contextQuality === "Useful" ? "Decent context. Add pricing notes and relationship lanes to sharpen further."
+              : "Founder context is thin. Open Max War Room → Founder Context tab to add sponsor prefs, no-go categories, and pricing notes."}
           </p>
         </div>
 
