@@ -1,0 +1,715 @@
+REPLITFOCUSQUAD — MAXIMILLION BLACK MONEY BRAIN / FOUNDER OS SUPREME INTELLIGENCE PASS
+
+You already completed the Max CRO War Room Supreme Pass.
+
+Do NOT build a pipeline/Kanban view right now.
+
+This pass is not about more boards.
+This pass is about making Max smarter, sharper, more founder-aware, more media-aware, more executive, and closer to the Founder’s ideal CRO/Founder OS companion.
+
+MISSION:
+Upgrade Max from a CRO cockpit into a Black money brain / MBA-caliber Founder buddy / revenue strategist inside HMG Newsroom.
+
+Max should feel like:
+
+* Harvard MBA + attorney-level business intelligence
+* Warren Buffett awareness
+* Black media money instincts
+* sports-savvy operator
+* founder-first strategist
+* calm executive voice
+* AAVE capable when useful
+* Stuart Scott occasional metaphor energy, never forced
+* practical, not corny
+* direct, not corporate fluff
+* useful in 10 seconds on mobile
+
+====================================================
+FOUNDER DNA
+===========
+
+Founder:
+Trent Clark
+
+Experience:
+
+* Former TMZ Hip Hop Head
+* Former HipHopDX Editor-In-Chief
+* Former HipHopWired Senior Editor
+* Former The Smoking Section Managing Editor
+
+Founder style:
+
+* editorial instincts
+* speed
+* practical execution
+* automation-first
+* founder should not repeat work
+* mobile-first
+* clean systems
+* reduce unnecessary complexity
+* no fake systems
+* no unnecessary dashboards
+* no corny business fluff
+
+Max role:
+
+* Chief Revenue Officer
+* Founder Operating System
+* business intelligence companion
+* relationship strategist
+* content-to-revenue translator
+* sponsor/package thinker
+* “what matters / what to ignore” filter
+
+Max is NOT:
+
+* article editor
+* graphics tool
+* WebEdit
+* Social Factory
+* ARTBOT
+* fake CRM
+* fake email sender
+* fake outreach automation
+* fake sponsor database
+* generic startup bro
+
+====================================================
+EXISTING MAX LINEAGE
+====================
+
+V1 — Sales Pipeline
+V1.2 — Executive Intelligence Docs
+V3 — Revenue OS
+V4 — Opportunity Systems / Global Missions
+V5 — Founder DNA
+V6 — Avatar / Chat
+V7 — Presence / HUD / Voice Shell / Night Shift / Memory
+Current — Max CRO War Room / revenue scoring / sponsor category map / package builder / follow-up tracker
+
+This pass should respect all prior Max doctrine and make it stronger.
+
+====================================================
+ABSOLUTE LAWS
+=============
+
+Do not create a new app.
+Do not create a shell.
+Do not overwrite existing Operator #6 or Max work.
+Do not fake AI.
+Do not fake ChatGPT.
+Do not fake Ollama.
+Do not fake CRM.
+Do not fake sponsor contacts.
+Do not fake outreach.
+Do not fake emails.
+Do not fake revenue.
+Do not fake deals.
+Do not fake backend success.
+Do not fake memory.
+
+If something is local/deterministic, label it honestly.
+If something is future model work, label it honestly.
+If something requires Founder review, label it clearly.
+
+Required truth labels:
+
+* Local Max Intelligence
+* Founder Review Required
+* No Outreach Sent
+* No CRM Connected
+* No Fake Deal Status
+* Future Relationship Database Hook Pending
+* Future Old Soldier/Ollama Hook Pending
+
+====================================================
+TASK 1 — CHECKPOINT FIRST
+=========================
+
+Create a clean checkpoint archive before coding:
+
+hmg-newsroom-max-before-black-money-brain-2026-06-06.tar.gz
+
+Archive rules:
+
+* no node_modules
+* no .git
+* no old archives
+* no screenshots
+* no secrets
+
+Then proceed.
+
+====================================================
+TASK 2 — MAX PERSONALITY / VOICE ENGINE
+=======================================
+
+Create a Max voice/personality engine.
+
+Suggested file:
+src/lib/hmg/haven-ai/maxVoiceEngine.ts
+
+It should provide reusable copy helpers for Max’s tone.
+
+Voice modes:
+
+1. Executive Calm
+2. Black Money Brain
+3. Sports Desk Money Read
+4. Founder Reality Check
+5. Deal Lawyer Lens
+6. Buffett Patience Lens
+7. Street-Smart Media Operator
+8. Quick Mobile Answer
+
+Max copy should sound like:
+
+* “This is worth a look.”
+* “Do not chase this unless…”
+* “The money move is…”
+* “The clean sponsor angle is…”
+* “This is a relationship play, not a content play.”
+* “Low effort, decent upside.”
+* “High upside, but Founder review first.”
+* “Ignore the noise here.”
+* “That’s not money, that’s motion.”
+* “This is a bunt, not a home run — but bunts win games too.”
+* “The bag is in the relationship, not the post.”
+* “Don’t sell the clip. Sell the audience moment.”
+
+Avoid:
+
+* corny hype
+* fake motivational quotes
+* generic SaaS wording
+* fake guru talk
+* overuse of slang
+* forced AAVE
+* robotic consulting language
+
+Integrate this engine into Max CRO briefs, Daily Money Brief, package builder, and Max UI microcopy.
+
+====================================================
+TASK 3 — FOUNDER CONTEXT MEMORY MODEL
+=====================================
+
+Create a local Founder Context model for Max.
+
+Suggested file:
+src/lib/hmg/haven-ai/maxFounderContext.ts
+
+Fields:
+
+* founderName
+* careerHighlights
+* editorialStrengths
+* businessPriorities
+* preferredWorkingStyle
+* verticalPriorities
+* noGoCategories
+* preferredSponsorCategories
+* relationshipNotes
+* pricingNotes
+* pastWins
+* ignoredCategories
+* voicePreferences
+* updatedAt
+
+Seed with safe Founder DNA from this prompt only.
+Do not invent contacts, deals, sponsors, pricing, or private facts.
+
+UI should allow Founder to edit/add:
+
+* sponsor preferences
+* no-go sponsor categories
+* relationship notes
+* pricing notes
+* vertical priorities
+* past wins
+* ignore list
+* Max tone preference
+
+Storage:
+Stored on this browser only.
+
+Truth:
+“Founder context helps local Max recommendations. No CRM or live memory system connected yet.”
+
+====================================================
+TASK 4 — MAX EXECUTIVE JUDGMENT ENGINE
+======================================
+
+Create a judgment layer beyond scoring.
+
+Suggested file:
+src/lib/hmg/haven-ai/maxJudgmentEngine.ts
+
+Given a CRO review/source, Max should classify:
+
+* Money Type
+
+  * Sponsor play
+  * Relationship play
+  * Audience growth play
+  * Authority play
+  * Package play
+  * Offline money play
+  * Ignore
+
+* Founder Effort
+
+  * 5-minute move
+  * 30-minute move
+  * Half-day move
+  * Needs team
+  * Not worth Founder time
+
+* Timing
+
+  * Act now
+  * Watch it
+  * Save for package
+  * Relationship first
+  * Ignore
+
+* Decision
+
+  * Chase
+  * Watch
+  * Package
+  * Delegate
+  * Ignore
+
+* Why
+  A clear explanation in Max’s voice.
+
+* Founder Next Move
+  One specific action.
+
+* What Max Would Not Do
+  A clear “avoid this” note.
+
+Use deterministic rules. No model calls.
+
+====================================================
+TASK 5 — MAX ASK ME BETTER QUESTIONS
+====================================
+
+Max should not just output briefs. Max should ask sharper questions.
+
+Add a “Max Questions” panel to Max War Room.
+
+For any Max review, generate 5–8 smart questions:
+
+Examples:
+
+* “Do we already have a warm lane to this person?”
+* “Is this a one-off post or a repeatable sponsor category?”
+* “Would this fit HipHopHaven, MusicHaven, or both?”
+* “Is there a clean local LA angle?”
+* “Is this worth Founder time or should it become a template?”
+* “Can this become a weekly franchise?”
+* “Would a sponsor care about the audience or just the topic?”
+* “Are we chasing money or chasing noise?”
+
+Actions:
+
+* Copy Questions
+* Save Questions to Output History
+* Mark Answered Manually
+
+Output kind:
+max-strategy-questions
+
+====================================================
+TASK 6 — MAX CONTENT-TO-MONEY TRANSLATOR
+========================================
+
+Build a content-to-money translator.
+
+Suggested file:
+src/lib/hmg/haven-ai/maxContentToMoney.ts
+
+Input:
+
+* article idea
+* source note
+* social post
+* video clip idea
+* interview idea
+* event idea
+
+Output:
+
+* what the content is
+* who the audience is
+* what a sponsor would buy
+* what the Founder should package
+* what asset to create
+* what to avoid
+* follow-up angle
+* possible HMG verticals
+* one-line pitch starter
+
+Add UI section:
+“Turn Content Into Money”
+
+This should be simple and mobile-friendly.
+
+====================================================
+TASK 7 — MAX DEAL LAWYER LENS
+=============================
+
+Add a “Deal Lawyer Lens” review.
+
+This is not legal advice. Label clearly:
+“Business risk review, not legal advice.”
+
+It should flag:
+
+* unclear rights
+* risky claims
+* brand safety concerns
+* reputation risk
+* overpromising
+* fake exclusivity
+* bad optics
+* sponsor mismatch
+* conflict-of-interest style risk
+* founder time drain
+
+Actions:
+
+* Copy Risk Review
+* Save to Output History
+
+Output kind:
+max-risk-review
+
+====================================================
+TASK 8 — MAX BUFFETT FILTER
+===========================
+
+Add “Buffett Filter” logic.
+
+This should help Max say:
+
+* simple business
+* durable audience
+* repeatable package
+* relationship moat
+* low-drama money
+* avoid hype cycle
+* avoid low-margin chaos
+* compound the brand
+
+For each opportunity:
+
+* Is this durable?
+* Is this repeatable?
+* Does it build HMG brand equity?
+* Does it compound relationships?
+* Is it noise?
+
+Actions:
+
+* Copy Buffett Filter
+* Save to Output History
+
+Output kind:
+max-buffett-filter
+
+====================================================
+TASK 9 — MAX SPORTS MONEY LENS
+==============================
+
+Add sports-style business analogies, sparingly and usefully.
+
+Examples:
+
+* layup
+* fast break
+* full-court press
+* punt
+* red zone
+* scouting report
+* film room
+* trap game
+* role player
+* franchise player
+* home run swing
+* bunt
+* bullpen
+
+This should never be forced.
+Use only when it clarifies the opportunity.
+
+Add a helper:
+getMaxSportsRead(opportunity)
+
+Output:
+
+* sports analogy
+* meaning
+* founder action
+
+====================================================
+TASK 10 — MAX MOBILE-FIRST QUICK ANSWER MODE
+============================================
+
+Add a “Quick Read” mode for Max.
+
+For each review, show a compact mobile-friendly card:
+
+* Money Move: Chase / Watch / Package / Ignore
+* Why
+* Next Action
+* Risk
+* Time Required
+* Copy Brief button
+
+This should be visible near the top of Max War Room.
+
+====================================================
+TASK 11 — MAX FOUNDER COMMANDS
+==============================
+
+Add a command-style panel.
+
+Founder can choose:
+
+* “Is this money or noise?”
+* “What’s the sponsor angle?”
+* “What should I ignore?”
+* “What’s the relationship play?”
+* “Turn this into a package.”
+* “Give me the quick read.”
+* “What would Max do?”
+* “What would Max not do?”
+* “Give me the Buffett read.”
+* “Give me the deal-lawyer read.”
+
+No model calls. These use deterministic local engines.
+
+====================================================
+TASK 12 — MAX DAILY EXECUTIVE BRIEF UPGRADE
+===========================================
+
+Upgrade Daily Money Brief into “Daily Executive Money Brief.”
+
+Sections:
+
+* Today’s money signal
+* Best opportunity
+* Best relationship play
+* Best package idea
+* What to ignore
+* Founder next move
+* Risk/reputation note
+* Buffett filter
+* Sports read if useful
+
+Make the copy sharper and more founder-aware.
+
+====================================================
+TASK 13 — MAX MEMORY HEALTH / CONTEXT QUALITY
+=============================================
+
+Add Max Context Quality score.
+
+Score based on whether Founder has added:
+
+* sponsor preferences
+* no-go categories
+* relationship notes
+* pricing notes
+* past wins
+* vertical priorities
+* preferred tone
+
+Labels:
+
+* Empty
+* Basic
+* Useful
+* Strong
+* Dangerous if missing
+
+Show:
+
+* what Max knows
+* what Max still needs
+* how each missing piece hurts recommendations
+
+Do not overemphasize this with nerd language.
+Founder-facing copy only.
+
+====================================================
+TASK 14 — COMMAND CENTER MAX UPGRADE
+====================================
+
+Upgrade Command Center Max area.
+
+It should show:
+
+* best current money move
+* money/noise read
+* follow-ups needed
+* Max context quality
+* one Founder next action
+* Open Max War Room button
+
+Avoid redundant cards.
+Do not add a pipeline board.
+
+====================================================
+TASK 15 — HAVEN AI ENGINE MAX CLARITY
+=====================================
+
+Make Haven AI Engine’s Max section clearer.
+
+Use founder-facing language:
+
+* “Max can review content for revenue angles.”
+* “Max can help decide what to chase, package, ignore, or follow up.”
+* “Max does not send emails or contact sponsors.”
+* “Max is local intelligence until Old Soldier/Ollama is wired.”
+
+Avoid tech language like:
+
+* provider
+* backend route pending
+* model hook
+  unless in technical status section.
+
+====================================================
+TASK 16 — OUTPUT HISTORY EXPANSION
+==================================
+
+Add output kinds if safe:
+
+* max-strategy-questions
+* max-risk-review
+* max-buffett-filter
+* max-executive-money-brief
+
+Cards should support:
+
+* Copy Brief
+* Copy Questions
+* Copy Risk Review
+* Copy Buffett Read
+* Copy JSON
+
+Do not break existing OutputHistory.
+
+====================================================
+TASK 17 — MAX CHAT / BUDDY SURFACE IF EXISTING
+==============================================
+
+If existing Max chat/avatar/voice surface exists, add lightweight integration:
+
+* Max can show the Quick Read
+* Max can show “what to ignore”
+* Max can show Founder next move
+* Max can show no-fake-outreach labels
+
+Do not build a whole new chat system if it does not already exist.
+Do not fake voice.
+Do not fake live model response.
+
+====================================================
+TASK 18 — DOCS
+==============
+
+Create:
+
+docs/HMG_NEWSROOM_MAX_BLACK_MONEY_BRAIN_PASS.md
+
+Include:
+
+* files created
+* files edited
+* voice engine
+* founder context model
+* judgment engine
+* better questions panel
+* content-to-money translator
+* deal lawyer lens
+* Buffett filter
+* sports money lens
+* quick read mode
+* founder commands
+* daily executive money brief
+* memory/context quality
+* Command Center integration
+* Haven AI clarity
+* Output History integration
+* fake-claim sweep
+* what is real now
+* what is future Old Soldier/Ollama
+
+====================================================
+TASK 19 — VERIFY + ARCHIVE
+==========================
+
+Run:
+pnpm typecheck
+pnpm build
+
+Create archive:
+hmg-newsroom-max-black-money-brain-pass-2026-06-06.tar.gz
+
+Archive rules:
+
+* no node_modules
+* no .git
+* no old archives
+* no screenshots
+* no secrets
+
+Integrity check.
+
+Final report:
+HMG NEWSROOM — MAX BLACK MONEY BRAIN PASS
+
+Include:
+
+* files created
+* files edited
+* Max voice/personality status
+* Founder context status
+* judgment engine status
+* better questions status
+* content-to-money translator status
+* Deal Lawyer Lens status
+* Buffett Filter status
+* Sports Money Lens status
+* Quick Read status
+* Founder Commands status
+* Daily Executive Brief status
+* Command Center integration
+* Haven AI clarity
+* Output History integration
+* fake-claim sweep
+* typecheck result
+* build result
+* archive path
+* archive size
+* archive integrity
+* remaining blockers
+
+NORTH STAR:
+Max should feel less like a dashboard and more like Trent’s sharp CRO companion.
+
+A Black media money strategist.
+A Founder OS buddy.
+A practical executive who tells the Founder what is money, what is noise, what to package, what to ignore, and what to do next.
+
+Do the full pass.
+Do not build a pipeline board.
+Do not fake live AI.
+Make Max smarter.
+Make Max useful.
+Make Max sound right.

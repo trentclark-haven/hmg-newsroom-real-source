@@ -175,48 +175,85 @@ function MaxCROStrip({ onOpen }: { onOpen?: () => void }) {
 }
 
 function MaxRevenueCard({ onOpen }: { onOpen?: () => void }) {
-  const [stats, setStats] = React.useState({
+  const [data, setData] = React.useState({
     total: 0,
     priority: 0,
     followUps: 0,
-    ignored: 0,
-    savedBriefs: 0,
-    topLabel: "—",
-    topSource: "—",
+    topSource: "",
+    topDecision: "",
+    contextQuality: "Empty" as "Empty" | "Basic" | "Useful" | "Strong",
+    founderNextAction: "",
+    moneyOrNoise: "",
   });
 
   React.useEffect(() => {
     function refresh() {
       try {
         const raw = window.localStorage.getItem("hmg-newsroom-max-cro-inbox-v1");
-        const items: Array<{ status: string; score?: { label?: string; moneyMoveScore?: number } | null; sourceText?: string }> = raw ? (JSON.parse(raw) as typeof items) : [];
-        const priority = items.filter((i) =>
-          ["Max Review Drafted", "Founder Review Required"].includes(i.status)
-        ).length;
+        type InboxItem = { status: string; score?: { label?: string; moneyMoveScore?: number } | null; sourceText?: string };
+        const items: InboxItem[] = raw ? (JSON.parse(raw) as InboxItem[]) : [];
+
+        const priority = items.filter((i) => ["Max Review Drafted", "Founder Review Required"].includes(i.status)).length;
         const followUps = items.filter((i) => i.status === "Relationship Follow-Up Needed").length;
-        const ignored = items.filter((i) => i.status === "Ignore / No Money Move").length;
-        const saved = items.filter((i) => i.status === "Saved to Output History").length;
-        const withScore = items
-          .filter((i) => i.score && i.score.moneyMoveScore !== undefined)
-          .sort((a, b) => (b.score?.moneyMoveScore ?? 0) - (a.score?.moneyMoveScore ?? 0));
+        const withScore = [...items].filter((i) => i.score?.moneyMoveScore !== undefined).sort((a, b) => (b.score?.moneyMoveScore ?? 0) - (a.score?.moneyMoveScore ?? 0));
         const top = withScore[0];
-        setStats({
+
+        // Context quality from Founder Context
+        const ctxRaw = window.localStorage.getItem("hmg-newsroom-max-founder-context-v1");
+        let contextQuality: typeof data.contextQuality = "Empty";
+        if (ctxRaw) {
+          try {
+            const ctx = JSON.parse(ctxRaw) as Record<string, unknown>;
+            let score = 0;
+            if (Array.isArray(ctx.preferredSponsorCategories) && (ctx.preferredSponsorCategories as string[]).length > 0) score += 20;
+            if (Array.isArray(ctx.noGoCategories) && (ctx.noGoCategories as string[]).length > 0) score += 15;
+            if (Array.isArray(ctx.verticalPriorities) && (ctx.verticalPriorities as string[]).length > 0) score += 15;
+            if (typeof ctx.pricingNotes === "string" && (ctx.pricingNotes as string).trim()) score += 15;
+            if (typeof ctx.relationshipNotes === "string" && (ctx.relationshipNotes as string).trim()) score += 15;
+            if (Array.isArray(ctx.pastWins) && (ctx.pastWins as string[]).length > 0) score += 10;
+            contextQuality = score >= 75 ? "Strong" : score >= 50 ? "Useful" : score >= 25 ? "Basic" : "Empty";
+          } catch { /* ignore */ }
+        }
+
+        const moneyOrNoise = priority > 0
+          ? `${priority} priority move${priority === 1 ? "" : "s"} worth a look`
+          : followUps > 0
+          ? `${followUps} relationship${followUps === 1 ? "" : "s"} need a follow-up`
+          : items.length > 0
+          ? "No priority signals yet — run sources through Max"
+          : "Submit sources to Max to get a read";
+
+        const founderNextAction = priority > 0
+          ? "Review priority moves in Max War Room and pick the top one."
+          : followUps > 0
+          ? "Check follow-up tracker. One relationship move this week."
+          : items.length > 0
+          ? "Send top sources through Max for a full review."
+          : "Open War Room → Source Intake. Paste your first source.";
+
+        setData({
           total: items.length,
           priority,
           followUps,
-          ignored,
-          savedBriefs: saved,
-          topLabel: top?.score?.label ?? (items.length ? "Pending review" : "—"),
-          topSource: top?.sourceText ? (top.sourceText.length > 55 ? `${top.sourceText.slice(0, 52)}…` : top.sourceText) : (items.length ? "Submit source to Max" : "—"),
+          topSource: top?.sourceText ? (top.sourceText.length > 60 ? `${top.sourceText.slice(0, 57)}…` : top.sourceText) : "",
+          topDecision: top?.score?.label ?? "",
+          contextQuality,
+          founderNextAction,
+          moneyOrNoise,
         });
-      } catch {
-        /* ignore */
-      }
+      } catch { /* ignore */ }
     }
     refresh();
     const id = window.setInterval(refresh, 10_000);
     return () => window.clearInterval(id);
   }, []);
+
+  const QUALITY_COLORS: Record<typeof data.contextQuality, string> = {
+    Empty: "text-muted-foreground",
+    Basic: "text-amber-600 dark:text-amber-400",
+    Useful: "text-sky-600 dark:text-sky-400",
+    Strong: "text-emerald-600 dark:text-emerald-400",
+  };
 
   return (
     <section className="hmg-paper-panel mt-3 p-4" data-testid="max-revenue-card">
@@ -227,12 +264,10 @@ function MaxRevenueCard({ onOpen }: { onOpen?: () => void }) {
           </div>
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: "#059669" }}>
-              Max Revenue State — Local CRO Review
+              Maximillion — Local CRO Intelligence
             </p>
             <p className="text-sm font-bold leading-tight text-foreground">
-              {stats.total === 0
-                ? "No sources in Max yet. Open Max CRO Inbox to begin."
-                : `${stats.total} source${stats.total === 1 ? "" : "s"} in Max · ${stats.priority} priority move${stats.priority === 1 ? "" : "s"}`}
+              {data.moneyOrNoise}
             </p>
           </div>
         </div>
@@ -245,33 +280,35 @@ function MaxRevenueCard({ onOpen }: { onOpen?: () => void }) {
         </button>
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
         {[
-          { label: "Priority Moves", value: stats.priority, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-500/10 border-emerald-400/30" },
-          { label: "Follow-Ups", value: stats.followUps, color: "text-violet-600 dark:text-violet-400", bg: "bg-violet-500/10 border-violet-400/30" },
-          { label: "Ignored", value: stats.ignored, color: "text-muted-foreground", bg: "bg-secondary border-border" },
-          { label: "Saved Briefs", value: stats.savedBriefs, color: "text-sky-600 dark:text-sky-400", bg: "bg-sky-500/10 border-sky-400/30" },
-          { label: "Total Sources", value: stats.total, color: "text-foreground", bg: "bg-card border-border" },
+          { label: "Priority Moves", value: data.priority, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-500/10 border-emerald-400/30" },
+          { label: "Follow-Ups", value: data.followUps, color: "text-violet-600 dark:text-violet-400", bg: "bg-violet-500/10 border-violet-400/30" },
+          { label: "Total Reviewed", value: data.total, color: "text-foreground", bg: "bg-card border-border" },
+          { label: "Max Context", value: data.contextQuality, color: QUALITY_COLORS[data.contextQuality], bg: "bg-secondary border-border" },
         ].map(({ label, value, color, bg }) => (
           <div key={label} className={`rounded-lg border px-2 py-2 text-center ${bg}`}>
-            <div className={`text-lg font-black ${color}`}>{value}</div>
+            <div className={`text-sm font-black leading-tight ${color}`}>{value}</div>
             <div className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground mt-0.5 leading-tight">{label}</div>
           </div>
         ))}
       </div>
 
-      {stats.total > 0 && (
-        <div className="rounded-lg border border-border/40 bg-card/50 px-3 py-2.5">
-          <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mb-1">
-            Highest Current Money Move
-          </p>
-          <p className="text-[11px] font-bold text-foreground leading-snug">{stats.topSource}</p>
-          <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold mt-0.5">{stats.topLabel}</p>
+      {data.topSource && (
+        <div className="rounded-lg border border-emerald-400/20 bg-emerald-500/[0.04] px-3 py-2.5 mb-2">
+          <p className="text-[9px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">Best Current Money Move</p>
+          <p className="text-[11px] font-bold text-foreground leading-snug">{data.topSource}</p>
+          {data.topDecision && <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold mt-0.5">{data.topDecision}</p>}
         </div>
       )}
 
-      <div className="flex flex-wrap gap-1 mt-2.5">
-        {["Local CRO Review", "No Outreach Sent", "No CRM Connected", "Founder Review Required"].map((t) => (
+      <div className="rounded-lg border border-border/30 bg-card/40 px-3 py-2 mb-2.5">
+        <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mb-0.5">Founder Next Action</p>
+        <p className="text-[11px] font-semibold text-foreground/80 leading-snug">{data.founderNextAction}</p>
+      </div>
+
+      <div className="flex flex-wrap gap-1">
+        {["Local Max Intelligence", "No Outreach Sent", "No CRM Connected", "Founder Review Required"].map((t) => (
           <span key={t} className="text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-border/50 bg-secondary/60 text-muted-foreground">
             {t}
           </span>

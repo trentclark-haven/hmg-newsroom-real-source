@@ -30,6 +30,7 @@ import {
   ExternalLink,
   FileText,
   Film,
+  HelpCircle,
   History,
   ImageIcon,
   Megaphone,
@@ -38,8 +39,11 @@ import {
   ScrollText,
   Search,
   Send,
+  ShieldAlert,
   Sparkles,
+  Star,
   Trash2,
+  TrendingUp,
   Wand2,
   X as XIcon,
   Zap,
@@ -205,6 +209,12 @@ const KIND_ICON: Record<OutputHistoryEntry["kind"], typeof Sparkles> = {
   "max-daily-money-brief": BookMarked,
   "max-follow-up": ScrollText,
   "max-revenue-package": Megaphone,
+  "max-strategy-questions": HelpCircle,
+  "max-risk-review": ShieldAlert,
+  "max-buffett-filter": TrendingUp,
+  "max-executive-money-brief": Star,
+  "max-content-to-money": FileText,
+  "max-judgment": Zap,
 };
 
 const KIND_LABEL: Record<OutputHistoryEntry["kind"], string> = {
@@ -221,6 +231,12 @@ const KIND_LABEL: Record<OutputHistoryEntry["kind"], string> = {
   "max-daily-money-brief": "Daily Brief",
   "max-follow-up": "Follow-Up",
   "max-revenue-package": "Rev Package",
+  "max-strategy-questions": "Strategy Q",
+  "max-risk-review": "Risk Review",
+  "max-buffett-filter": "Buffett",
+  "max-executive-money-brief": "Exec Brief",
+  "max-content-to-money": "Content → $",
+  "max-judgment": "Judgment",
 };
 
 function EntryCard({

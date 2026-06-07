@@ -22,7 +22,13 @@ export interface OutputHistoryEntry {
     | "max-cro-brief"
     | "max-daily-money-brief"
     | "max-follow-up"
-    | "max-revenue-package";
+    | "max-revenue-package"
+    | "max-strategy-questions"
+    | "max-risk-review"
+    | "max-buffett-filter"
+    | "max-executive-money-brief"
+    | "max-content-to-money"
+    | "max-judgment";
   createdAt: number;
   prompt: string;
   role?: string;

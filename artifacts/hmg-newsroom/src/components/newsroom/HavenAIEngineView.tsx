@@ -218,7 +218,7 @@ function MaxRevenueBrainSection({ onNavigate }: { onNavigate?: (v: View) => void
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {[
-            { label: "Max Reviews", value: croStats.total, color: "text-emerald-400" },
+            { label: "Sources Reviewed", value: croStats.total, color: "text-emerald-400" },
             { label: "Priority Moves", value: croStats.priority, color: "text-emerald-300" },
             { label: "Follow-Ups", value: croStats.followUps, color: "text-violet-400" },
             { label: "Saved Briefs", value: croStats.saved, color: "text-sky-400" },
@@ -230,16 +230,33 @@ function MaxRevenueBrainSection({ onNavigate }: { onNavigate?: (v: View) => void
           ))}
         </div>
 
+        {/* Founder-facing capability description */}
+        <div className="space-y-1.5">
+          {[
+            "Max can review content for revenue angles — sponsor, relationship, package, or offline play.",
+            "Max can help decide what to chase, package, ignore, or follow up on.",
+            "Max does not send emails or contact sponsors. All output is for Founder review.",
+            "Max is local intelligence until Old Soldier / Ollama is wired.",
+          ].map((line) => (
+            <div key={line} className="flex items-start gap-2 text-[11px] text-emerald-200/70 leading-relaxed">
+              <span className="text-emerald-500 shrink-0 mt-0.5">›</span>
+              {line}
+            </div>
+          ))}
+        </div>
+
         <div className={`flex items-start gap-2 rounded-lg border px-3 py-2 ${croStats.hasMemory ? "border-emerald-500/30 bg-emerald-500/[0.06]" : "border-amber-500/30 bg-amber-500/[0.06]"}`}>
           <Brain className={`w-3.5 h-3.5 flex-shrink-0 mt-0.5 ${croStats.hasMemory ? "text-emerald-400" : "text-amber-400"}`} />
           <p className={`text-[11px] leading-relaxed ${croStats.hasMemory ? "text-emerald-200/80" : "text-amber-200/80"}`}>
-            <strong className={croStats.hasMemory ? "text-emerald-300" : "text-amber-300"}>Max Memory: </strong>
-            {croStats.memoryNote}
+            <strong className={croStats.hasMemory ? "text-emerald-300" : "text-amber-300"}>Founder Context: </strong>
+            {croStats.hasMemory
+              ? "Revenue notes loaded. Max uses Founder context to sharpen recommendations."
+              : "Founder context not added yet. Open Max War Room → Founder Context to sharpen recommendations."}
           </p>
         </div>
 
         <div className="flex flex-wrap gap-1.5">
-          {["Local CRO Review", "No CRM Connected", "No Outreach Sent", "Founder Review Required", "Future Relationship Database Hook Pending"].map((t) => (
+          {["Local Max Intelligence", "No CRM Connected", "No Outreach Sent", "Founder Review Required", "Future Old Soldier / Ollama Hook Pending"].map((t) => (
             <span key={t} className="text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 text-emerald-400/70">
               {t}
             </span>
