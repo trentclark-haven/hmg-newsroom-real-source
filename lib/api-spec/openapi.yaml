@@ -1,0 +1,825 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: ai
+    description: AI generation operations
+  - name: cutmaster
+    description: CutMaster / WebEdit operations
+  - name: wordpress
+    description: WordPress integration
+  - name: public-app
+    description: Public app integration
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /ai/generate:
+    post:
+      operationId: generateContent
+      tags: [ai]
+      summary: Generate quick content (article, social, newsletter)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContentInput"
+      responses:
+        "200":
+          description: Generated content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenerateResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /ai/generate-pack:
+    post:
+      operationId: generatePack
+      tags: [ai]
+      summary: Generate a full breaking news pack
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PackInput"
+      responses:
+        "200":
+          description: Generated pack
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PackResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /ai/generate-specialist:
+    post:
+      operationId: generateSpecialist
+      tags: [ai]
+      summary: Generate specialist output (artbot, cutmaster, seomaster, clipbrand)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SpecialistInput"
+      responses:
+        "200":
+          description: Specialist output
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpecialistResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /ai/generate-image:
+    post:
+      operationId: generateImage
+      tags: [ai]
+      summary: Generate an AI concept image
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImageInput"
+      responses:
+        "200":
+          description: Generated image as base64 data URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /ai/generate-image-prompt-pack:
+    post:
+      operationId: generateImagePromptPack
+      tags: [ai]
+      summary: Generate a multi-platform image prompt pack
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImagePromptPackInput"
+      responses:
+        "200":
+          description: Image prompt pack
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImagePromptPackResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /cutmaster/transcribe:
+    post:
+      operationId: cutmasterTranscribe
+      tags: [cutmaster]
+      summary: Transcribe a video/audio clip and extract suggested clips
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TranscribeInput"
+      responses:
+        "200":
+          description: Transcription result with suggested clips
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TranscribeResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /wordpress/status:
+    get:
+      operationId: getWordpressStatus
+      tags: [wordpress]
+      summary: Get WordPress connection status for a silo
+      parameters:
+        - name: silo
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/Silo"
+      responses:
+        "200":
+          description: WordPress connection status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WordpressStatus"
+
+  /wordpress/publish:
+    post:
+      operationId: publishToWordpress
+      tags: [wordpress]
+      summary: Publish or draft an article to WordPress
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WordpressPublishInput"
+      responses:
+        "200":
+          description: Publish result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WordpressPublishResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Approval required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /public-app/status:
+    get:
+      operationId: getPublicAppStatus
+      tags: [public-app]
+      summary: Get public app connection status
+      responses:
+        "200":
+          description: Public app status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicAppStatus"
+
+  /public-app/publish:
+    post:
+      operationId: publishToPublicApp
+      tags: [public-app]
+      summary: Publish an article to the public app
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PublicAppPublishInput"
+      responses:
+        "200":
+          description: Publish result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicAppPublishResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    # ─── Enums ───────────────────────────────────────────────────────────────
+
+    Silo:
+      type: string
+      enum:
+        - hiphophaven
+        - raphaven
+        - musichaven
+        - sportshaven
+        - fithaven
+        - cannahaven
+        - hmg
+
+    Role:
+      type: string
+      enum:
+        - managing_editor
+        - staff_writer
+
+    Tone:
+      type: string
+      enum:
+        - professional
+        - viral
+        - excited
+        - fiery
+
+    Platform:
+      type: string
+      enum:
+        - website
+        - x
+        - instagram
+        - tiktok
+        - newsletter
+        - youtube
+
+    Specialist:
+      type: string
+      enum:
+        - artbot
+        - cutmaster
+        - seomaster
+        - clipbrand
+        - trentoverride
+
+    PublishStatus:
+      type: string
+      enum:
+        - draft
+        - publish
+
+    PublishRequestStatus:
+      type: string
+      enum:
+        - draft
+        - publish
+
+    # ─── Shared sub-schemas ───────────────────────────────────────────────────
+
+    SeoBlock:
+      type: object
+      properties:
+        metaDescription:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - metaDescription
+        - categories
+
+    SocialBlock:
+      type: object
+      properties:
+        x:
+          type: string
+        instagram:
+          type: string
+        tiktok:
+          type: string
+        newsletter:
+          type: string
+        youtube:
+          type: string
+      required:
+        - x
+        - instagram
+        - tiktok
+        - newsletter
+        - youtube
+
+    # ─── Response schemas ─────────────────────────────────────────────────────
+
+    GenerateResponse:
+      type: object
+      properties:
+        content:
+          type: string
+        headline:
+          type: string
+        dek:
+          type: string
+        altHeadlines:
+          type: array
+          items:
+            type: string
+        keyFacts:
+          type: array
+          items:
+            type: string
+        checklist:
+          type: array
+          items:
+            type: string
+        social:
+          $ref: "#/components/schemas/SocialBlock"
+        seo:
+          $ref: "#/components/schemas/SeoBlock"
+        imagePrompts:
+          type: array
+          items:
+            type: string
+        fallback:
+          type: boolean
+      required:
+        - content
+        - seo
+        - imagePrompts
+
+    PackResponse:
+      type: object
+      properties:
+        headline:
+          type: string
+        summary:
+          type: string
+        article:
+          type: string
+        social:
+          $ref: "#/components/schemas/SocialBlock"
+        seo:
+          $ref: "#/components/schemas/SeoBlock"
+        imagePrompts:
+          type: array
+          items:
+            type: string
+        fallback:
+          type: boolean
+      required:
+        - headline
+        - summary
+        - article
+        - social
+        - seo
+        - imagePrompts
+
+    SpecialistResponse:
+      type: object
+      properties:
+        content:
+          type: string
+        specialist:
+          $ref: "#/components/schemas/Specialist"
+      required:
+        - content
+
+    ImageResponse:
+      type: object
+      properties:
+        image:
+          type: string
+          description: Base64-encoded image data URL
+      required:
+        - image
+
+    ImagePromptPackResponse:
+      type: object
+      properties:
+        websitePrompt:
+          type: string
+        instagramFeedPrompt:
+          type: string
+        instagramStoryPrompt:
+          type: string
+        tiktokShortsPrompt:
+          type: string
+        youtubeThumbnailPrompt:
+          type: string
+        xPrompt:
+          type: string
+        facebookPrompt:
+          type: string
+        caption:
+          type: string
+        altText:
+          type: string
+      required:
+        - websitePrompt
+        - instagramFeedPrompt
+        - instagramStoryPrompt
+        - tiktokShortsPrompt
+        - youtubeThumbnailPrompt
+        - xPrompt
+        - facebookPrompt
+        - caption
+        - altText
+
+    TranscribeWord:
+      type: object
+      properties:
+        word:
+          type: string
+        start:
+          type: number
+        end:
+          type: number
+        confidence:
+          type: number
+      required:
+        - word
+        - start
+        - end
+
+    TranscribeSegment:
+      type: object
+      properties:
+        id:
+          type: integer
+        start:
+          type: number
+        end:
+          type: number
+        text:
+          type: string
+      required:
+        - id
+        - start
+        - end
+        - text
+
+    SuggestedClip:
+      type: object
+      properties:
+        id:
+          type: string
+        start:
+          type: number
+        end:
+          type: number
+        text:
+          type: string
+        hookScore:
+          type: number
+      required:
+        - id
+        - start
+        - end
+        - text
+        - hookScore
+
+    TranscribeResponse:
+      type: object
+      properties:
+        text:
+          type: string
+        duration:
+          type: number
+        language:
+          type: string
+        words:
+          type: array
+          items:
+            $ref: "#/components/schemas/TranscribeWord"
+        segments:
+          type: array
+          items:
+            $ref: "#/components/schemas/TranscribeSegment"
+        suggestedClips:
+          type: array
+          items:
+            $ref: "#/components/schemas/SuggestedClip"
+        timingMode:
+          type: string
+          enum:
+            - exact
+            - estimated
+      required:
+        - text
+        - duration
+        - language
+        - words
+        - segments
+        - suggestedClips
+
+    WordpressStatus:
+      type: object
+      properties:
+        configured:
+          type: boolean
+        siteUrl:
+          type: string
+      required:
+        - configured
+
+    WordpressPublishResponse:
+      type: object
+      properties:
+        link:
+          type: string
+        url:
+          type: string
+        status:
+          type: string
+        title:
+          type: string
+        postId:
+          type: integer
+
+    PublicAppStatus:
+      type: object
+      properties:
+        configured:
+          type: boolean
+      required:
+        - configured
+
+    PublicAppRemote:
+      type: object
+      properties:
+        url:
+          type: string
+        link:
+          type: string
+
+    PublicAppPublishResponse:
+      type: object
+      properties:
+        url:
+          type: string
+        link:
+          type: string
+        status:
+          type: string
+        configured:
+          type: boolean
+        remote:
+          $ref: "#/components/schemas/PublicAppRemote"
+
+    # ─── Request body schemas (entity-named, never <OperationIdPascal>Body) ──
+
+    ContentInput:
+      type: object
+      properties:
+        silo:
+          $ref: "#/components/schemas/Silo"
+        role:
+          $ref: "#/components/schemas/Role"
+        tone:
+          $ref: "#/components/schemas/Tone"
+        platform:
+          $ref: "#/components/schemas/Platform"
+        prompt:
+          type: string
+        image:
+          type: string
+          description: Base64 image data URL (optional)
+        founderVoice:
+          type: boolean
+      required:
+        - silo
+        - role
+        - tone
+        - platform
+        - prompt
+
+    PackInput:
+      type: object
+      properties:
+        silo:
+          $ref: "#/components/schemas/Silo"
+        role:
+          $ref: "#/components/schemas/Role"
+        tone:
+          $ref: "#/components/schemas/Tone"
+        prompt:
+          type: string
+        image:
+          type: string
+          description: Base64 image data URL (optional)
+        useWebSearch:
+          type: boolean
+        founderVoice:
+          type: boolean
+      required:
+        - silo
+        - role
+        - tone
+        - prompt
+
+    SpecialistInput:
+      type: object
+      properties:
+        specialist:
+          $ref: "#/components/schemas/Specialist"
+        silo:
+          $ref: "#/components/schemas/Silo"
+        prompt:
+          type: string
+        image:
+          type: string
+          description: Base64 image data URL (optional)
+      required:
+        - specialist
+        - silo
+        - prompt
+
+    ImageInput:
+      type: object
+      properties:
+        silo:
+          $ref: "#/components/schemas/Silo"
+        prompt:
+          type: string
+        size:
+          type: string
+          description: Image size (e.g. 1024x1024)
+      required:
+        - silo
+        - prompt
+
+    ImagePromptPackInput:
+      type: object
+      properties:
+        prompt:
+          type: string
+        headline:
+          type: string
+        silo:
+          $ref: "#/components/schemas/Silo"
+      required:
+        - prompt
+        - silo
+
+    TranscribeInput:
+      type: object
+      properties:
+        silo:
+          $ref: "#/components/schemas/Silo"
+        file:
+          type: string
+          description: Base64-encoded audio/video file
+      required:
+        - silo
+        - file
+
+    WordpressPublishInput:
+      type: object
+      properties:
+        silo:
+          $ref: "#/components/schemas/Silo"
+        title:
+          type: string
+        content:
+          type: string
+        excerpt:
+          type: string
+        metaDescription:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        status:
+          $ref: "#/components/schemas/PublishRequestStatus"
+        slug:
+          type: string
+        canonicalUrl:
+          type: string
+        videoEmbed:
+          type: string
+        featuredMediaId:
+          type: integer
+        overrideUrl:
+          type: string
+        overrideUser:
+          type: string
+        overridePassword:
+          type: string
+      required:
+        - silo
+        - title
+        - content
+
+    PublicAppPublishInput:
+      type: object
+      properties:
+        silo:
+          $ref: "#/components/schemas/Silo"
+        title:
+          type: string
+        content:
+          type: string
+        excerpt:
+          type: string
+        slug:
+          type: string
+        canonicalUrl:
+          type: string
+        videoEmbed:
+          type: string
+        featuredImageUrl:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - silo
+        - title
+        - content

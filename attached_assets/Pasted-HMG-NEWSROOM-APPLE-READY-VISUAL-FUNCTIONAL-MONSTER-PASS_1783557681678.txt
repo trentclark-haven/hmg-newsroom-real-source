@@ -1,0 +1,405 @@
+HMG NEWSROOM APPLE-READY VISUAL + FUNCTIONAL MONSTER PASS.
+
+The app is now technically alive. Do not restart from scratch.
+
+Known current FocusDos state:
+- Typecheck: PASS, 0 errors.
+- Unit tests: PASS, 82/82.
+- API server typecheck: PASS.
+- Production build: PASS.
+- Browser console: clean after invalid hook call fix.
+- /api/healthz returns OK.
+- /api/system/status returns the correct shape.
+- /api/wordpress/status returns honest unconfigured status for all 7 silos.
+- Invalid hook call in SystemHealthCard was fixed.
+- SSRF / WordPress API contract work was addressed.
+- Current preview renders Editorial Desk by silo.
+
+Now the next pass is not about basic survival.
+This pass is about making HMG Newsroom feel Apple-ready, premium, fast, polished, and useful enough for real-time field publishing.
+
+Do not publish.
+Do not create a separate app.
+Do not restart from scratch.
+Do not make a documentation-first packet.
+Do not fabricate success.
+Do not hide failures.
+Do not add fake connected states.
+Do not claim WordPress direct publish is live unless env/secrets truly verify it.
+Do not use raw developer jargon in public UI.
+Do not let the app feel like a monitor board.
+
+MISSION:
+Use the current running app and make it look, feel, and function like a premium HMG publishing command app.
+
+The Founder’s real-world need:
+He should be able to leave an event, paste notes/photos/sources from anywhere, create a clean article/social/export package fast, and beat traditional publishers in real time.
+
+The app must feel like:
+- premium newsroom command center
+- field publishing weapon
+- fast editorial cockpit
+- polished internal Apple-quality app
+- not a debug board
+- not a form graveyard
+- not a demo sandbox
+
+FOUNDER VISUAL QA FROM SCREENSHOTS:
+The current app is functional, but these issues are visible:
+1. Header/top bar feels crowded.
+2. Logo/title area can visually collide or look compressed.
+3. Brand/silo selector is useful but needs stronger spacing, hierarchy, and polish.
+4. Editorial Desk panels are too form-heavy and monitor-board-like.
+5. The screen has too many similar pill buttons with weak hierarchy.
+6. Empty states feel passive instead of action-driving.
+7. “Create Article Draft” being disabled is honest, but the path to unlock it should feel obvious and motivating.
+8. Research Notes, Main Story, Research, Facts & Quotes, Safety, Saved Facts, Founder Voice Check, and Output need better visual flow.
+9. The Founder Voice Quality Check is useful but should feel like a premium editorial quality gate, not a checklist slapped onto the bottom.
+10. WordPress/post-from-anywhere path needs to feel central and powerful.
+11. System Health must be honest, but not ugly or too diagnostic.
+12. The app must look less like a monitor board and more like a polished product.
+
+PUBLIC PRODUCT NAMING:
+Use current public names:
+- WebArt
+- WebEdit
+- Editorial Desk / Editorial Haven
+- Social Factory
+- Export Vault
+- WordPress Publish / WordPress Draft / Media Library
+- HMG Memory
+- Maximillion
+- Founder Mode
+- System Health
+
+Legacy names may remain only as internal implementation details if risky to rename:
+- ArtBotView.tsx may be internal WebArt implementation.
+- CutMasterView.tsx may be internal WebEdit implementation.
+- ArtBot can remain only if intentionally used as an assistant/drawer name.
+- CutMaster must not be the main public module name if WebEdit is the product name.
+
+PHASE 1 — UI / UX POLISH SWEEP
+Inspect the current rendered app and source.
+
+Focus on:
+- header
+- logo/title area
+- silo selector
+- Editorial Desk
+- WebArt
+- WebEdit
+- WordPress Publish / WP Connections
+- Export Vault
+- Social Factory
+- System Health
+- HMG Memory
+- Maximillion if visible
+- mobile/tablet/desktop responsiveness
+
+Apply safe, real code improvements:
+1. Clean header spacing so logos/titles never overlap.
+2. Make the active silo selector feel premium and intentional.
+3. Improve section hierarchy so the app feels like a cockpit, not a stacked form.
+4. Make the main Founder workflow obvious:
+   Event notes → research/source facts → story angle → draft → social package → WordPress/export.
+5. Improve empty states with action-oriented guidance.
+6. Improve disabled states so users know exactly what unlocks the button.
+7. Improve loading states.
+8. Improve error states.
+9. Remove raw diagnostics from public surfaces.
+10. Keep honest blocked states where services are unconfigured.
+11. Make cards feel cleaner, more premium, less heavy.
+12. Tighten spacing where the page feels bloated.
+13. Improve button hierarchy:
+    - primary action
+    - secondary action
+    - utility action
+14. Ensure brand colors feel consistent but not overwhelming.
+15. Make the Output panel feel like the destination, not an afterthought.
+16. Do not break existing behavior.
+17. Do not introduce risky dependencies unless absolutely necessary.
+18. Do not do a giant redesign that destabilizes the app.
+
+PHASE 2 — EDITORIAL DESK FIELD-PUBLISHING POWER PASS
+The Editorial Desk must feel like the Founder can publish from anywhere.
+
+Improve:
+- “Research Notes”
+- “Main Story”
+- “Facts & Quotes”
+- “Safety”
+- “Saved Facts”
+- “Founder Voice Quality Check”
+- “Output”
+- article draft flow
+- breaking story flow
+- social post flow
+
+Make the path clearer:
+1. Paste raw event notes.
+2. Attach image/source.
+3. Select angle.
+4. Confirm facts/quotes/safety.
+5. Generate article draft.
+6. Generate social posts.
+7. Export or prepare WordPress draft.
+
+Add safe polish:
+- better helper copy
+- stronger CTA text
+- clearer “0/10 filled” explanation
+- better “HMG Memory Ready” messaging
+- better “Live Web Not Connected” honest state
+- better NotebookLM/Gemini paste flow guidance
+- stronger output empty state
+
+Do not fake live research.
+Do not fake WordPress publish.
+Do not fake HMG Memory.
+Make every blocked state honest and useful.
+
+PHASE 3 — WEBART VISUAL + FUNCTIONAL SMOKE
+WebArt was technically patched. Now make sure it feels launch-worthy.
+
+Open/click WebArt.
+
+Verify:
+- route loads
+- no console errors
+- lazy/Suspense patch still present
+- ImageCropper / TemplateStudio / CollageStudio / OfficialSourceGuide do not crash route
+- loading states are polished
+- empty states are polished
+- public naming says WebArt
+- no stale ArtBot main-module label unless intentionally assistant-only
+- upload/image/action buttons are coherent
+- no fake generation claims
+- no raw developer jargon
+
+Apply safe UI fixes if needed.
+
+Create:
+WEBART_APPLE_READY_RECEIPT.md
+
+PHASE 4 — WEBEDIT VISUAL + FUNCTIONAL SMOKE
+WebEdit was technically patched. Now make sure it feels launch-worthy.
+
+Open/click WebEdit.
+
+Verify:
+- route loads
+- no console errors
+- lazy/Suspense patch still present
+- upload/edit/export flow is visually coherent
+- empty states guide the Founder
+- public naming says WebEdit
+- no stale CutMaster main-module label
+- no fake captions/transcription claims
+- no fake posting claims
+- no raw developer jargon
+
+Apply safe UI fixes if needed.
+
+Create:
+WEBEDIT_APPLE_READY_RECEIPT.md
+
+PHASE 5 — WORDPRESS POST-FROM-ANYWHERE POWER PASS
+WordPress is the “beat every publisher” lane. Make it excellent and honest.
+
+Inspect:
+- WordPress status screen
+- WP Connections
+- WordPress Publish
+- WordPress Draft
+- Export Vault
+- Media Library
+- API routes
+- environment variable checks
+- publish/test/status buttons
+- error states
+- blocked states
+
+Required behavior:
+1. If env vars are missing, show an honest unconfigured state.
+2. Show required env var names only, never values.
+3. No fake green “connected” state.
+4. Make it clear what the Founder can do now:
+   - manual draft/export
+   - package content
+   - prepare media
+   - verify WP status
+5. Make it clear what requires setup:
+   - direct publish
+   - app password
+   - per-silo WP credentials
+6. If direct publish can be tested, test it.
+7. If direct publish cannot be tested, make the draft/export lane excellent.
+8. Add or polish a “Post From Anywhere” flow if safe:
+   - article package
+   - social package
+   - export package
+   - WordPress draft handoff
+
+Create:
+WORDPRESS_APPLE_READY_RECEIPT.md
+
+PHASE 6 — SYSTEM HEALTH / NO FAKE READINESS
+System Health must be honest and premium.
+
+Fix:
+- no invalid hook calls
+- no fake all-green claims
+- no confusing raw API-shape errors
+- no ugly diagnostic-only UI
+- clear statuses:
+  - app healthy
+  - API healthy
+  - WordPress unconfigured
+  - memory ready/unavailable
+  - external services unconfigured
+  - missing env setup
+
+Create:
+SYSTEM_HEALTH_APPLE_READY_RECEIPT.md
+
+PHASE 7 — ALL-SECTIONS CLICK SMOKE
+Click or inspect every major visible section.
+
+Minimum:
+- Editorial Desk
+- WebArt
+- WebEdit
+- Social Factory
+- Export Vault
+- WordPress / WP Connections
+- Media Library if present
+- System Health
+- HMG Memory if present
+- Maximillion if present
+- each silo selector:
+  - HipHopHaven
+  - RapHaven
+  - MusicHaven
+  - SportsHaven
+  - FitHaven
+  - CannaHaven
+  - HMG
+
+For each:
+- loads yes/no
+- console error yes/no
+- visual quality notes
+- action path clear yes/no
+- bugs found
+- fixes applied
+
+Create:
+ALL_SECTIONS_CLICK_SMOKE_RECEIPT.md
+
+PHASE 8 — RESPONSIVE APP-STORE-READY PASS
+Inspect at:
+- desktop
+- tablet-ish width
+- mobile-ish width if possible
+
+Fix obvious issues:
+- horizontal overflow
+- clipped header
+- unreadable silo selector
+- crushed buttons
+- unusable forms
+- floating/watermark overlap if app-controlled
+- broken sticky header
+- button rows wrapping badly
+- cards too cramped
+
+Create:
+RESPONSIVE_APPLE_READY_RECEIPT.md
+
+PHASE 9 — TEST / BUILD AFTER POLISH
+After all code changes, run:
+
+- typecheck
+- API server typecheck
+- unit tests
+- production build
+- API smoke routes:
+  - /api/healthz
+  - /api/system/status
+  - /api/wordpress/status
+- browser console smoke
+- forbidden public string sweep
+- WebArt smoke
+- WebEdit smoke
+- WordPress smoke
+
+Save receipts:
+BUILD_RECEIPTS/
+TEST_RECEIPTS/
+SMOKE_RECEIPTS/
+
+If something fails:
+- fix it if caused by this pass
+- classify it if caused by env/secrets/network
+- do not hide it
+- do not mark green falsely
+
+PHASE 10 — PACKAGE THE APPLE-READY PASS
+Create:
+
+HMG_NEWSROOM_FOCUSDOS_APPLE_READY_MONSTER_PASS/
+
+Include:
+- PATCHED_SOURCE_FILES/
+- DIFFS/
+- BUILD_RECEIPTS/
+- TEST_RECEIPTS/
+- SMOKE_RECEIPTS/
+- SCREEN_QA_RECEIPTS/
+- WEBART_APPLE_READY_RECEIPT.md
+- WEBEDIT_APPLE_READY_RECEIPT.md
+- WORDPRESS_APPLE_READY_RECEIPT.md
+- SYSTEM_HEALTH_APPLE_READY_RECEIPT.md
+- ALL_SECTIONS_CLICK_SMOKE_RECEIPT.md
+- RESPONSIVE_APPLE_READY_RECEIPT.md
+- UI_POLISH_CHANGELOG.md
+- BUGS_FIXED_THIS_PASS.md
+- REMAINING_BLOCKERS.md
+- DR_REPLIT_APPLY_AND_VERIFY.md
+- DR_REPLIT_FINAL_LAUNCH_PROMPT.md
+- TRANSFER_INSTRUCTIONS.md
+
+Package:
+HMG_NEWSROOM_FOCUSDOS_APPLE_READY_MONSTER_PASS.tar.gz
+
+FINAL REPORT MUST INCLUDE:
+1. Exact files changed.
+2. Exact visual polish changes.
+3. Bugs fixed.
+4. Bugs still present.
+5. WebArt status and confidence percentage.
+6. WebEdit status and confidence percentage.
+7. WordPress post-from-anywhere status and confidence percentage.
+8. Editorial Desk status and confidence percentage.
+9. System Health status and confidence percentage.
+10. All-sections click smoke status.
+11. Responsive/mobile status.
+12. Typecheck status.
+13. API typecheck status.
+14. Unit test status.
+15. Production build status.
+16. Browser console status.
+17. API route smoke status.
+18. Overall launch readiness percentage.
+19. Adrian/Marshall demo readiness percentage.
+20. Live published: NO.
+21. Tarball name, size, SHA256.
+22. Exact next move.
+
+This is the Apple-ready monster pass.
+Make the app look less like a monitor board and more like the fastest field-publishing newsroom app alive.
+
+Boil the ocean.
+Smoke the bugs.
+Polish the product.
+Package the proof.

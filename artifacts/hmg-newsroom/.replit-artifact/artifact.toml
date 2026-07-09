@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "HMG Newsroom"
+version = "1.0.0"
+id = "artifacts/hmg-newsroom"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23605
+
+[services.development]
+run = "pnpm --filter @workspace/hmg-newsroom run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/hmg-newsroom", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/hmg-newsroom/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23605"
+BASE_PATH = "/"

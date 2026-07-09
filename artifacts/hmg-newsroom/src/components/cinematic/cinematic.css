@@ -1,0 +1,105 @@
+/* OPERATION ARRRUGGA — cinematic motion primitives.
+ *
+ * STRICT contract (architect-reviewed):
+ *   Every @keyframes here animates ONLY transform / opacity / filter.
+ *   Those three properties run on the GPU compositor, never trigger
+ *   layout, and never trigger paint repaints of unrelated elements.
+ *   This is what protects the "no layout jumps" success criterion.
+ *
+ *   Specifically NOT used: box-shadow, background-position, top, left,
+ *   width, height, margin, padding, border-* properties.
+ *   Glow effects use filter: drop-shadow().
+ *   Shimmer effects use opacity + filter: brightness().
+ */
+
+@keyframes arrugga-pulse {
+  0%, 100% { transform: scale(1);    opacity: 1;   }
+  50%      { transform: scale(1.04); opacity: 0.92; }
+}
+
+@keyframes arrugga-burst {
+  0%   { transform: scale(0.6) translateY(8px);  opacity: 0; filter: blur(6px); }
+  35%  { transform: scale(1.06) translateY(-2px); opacity: 1; filter: blur(0);  }
+  100% { transform: scale(1)    translateY(0);   opacity: 1; filter: blur(0);  }
+}
+
+@keyframes arrugga-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 12px currentColor); }
+  50%      { filter: drop-shadow(0 0 8px currentColor) drop-shadow(0 0 28px currentColor); }
+}
+
+@keyframes arrugga-ribbon-tick {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes arrugga-card-rise {
+  0%   { transform: translateY(18px) scale(0.985); opacity: 0; }
+  60%  { transform: translateY(-2px) scale(1.005); opacity: 1; }
+  100% { transform: translateY(0)    scale(1);     opacity: 1; }
+}
+
+@keyframes arrugga-headline-sweep {
+  0%   { transform: translateX(-12px); opacity: 0; }
+  100% { transform: translateX(0);     opacity: 1; }
+}
+
+@keyframes arrugga-text-shimmer {
+  0%, 100% { opacity: 1;    filter: brightness(1);    }
+  50%      { opacity: 0.85; filter: brightness(1.35); }
+}
+
+/* Shimmer text: keep font color stable, modulate brightness only.
+ * Inherits color from the parent style attribute so brand colors
+ * still show through. No background-clip, no background-position. */
+.arrugga-shimmer-text {
+  animation: arrugga-text-shimmer 2.4s ease-in-out infinite;
+}
+
+.arrugga-pulse           { animation: arrugga-pulse 1.6s ease-in-out infinite; }
+.arrugga-glow            { animation: arrugga-glow 2.2s ease-in-out infinite; }
+.arrugga-burst           { animation: arrugga-burst 480ms cubic-bezier(.18,.84,.36,1.18) both; }
+.arrugga-card-rise       { animation: arrugga-card-rise 520ms cubic-bezier(.22,.86,.28,1.05) both; }
+.arrugga-headline-sweep  { animation: arrugga-headline-sweep 360ms ease-out both; }
+
+.arrugga-ribbon-bar {
+  position: relative;
+  overflow: hidden;
+}
+/* Travelling highlight uses transform only (translateX). The static
+ * background gradient lives in the ::before, which never animates. */
+.arrugga-ribbon-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0.3;
+  pointer-events: none;
+}
+.arrugga-ribbon-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.18) 45%,
+    rgba(255,255,255,0.32) 50%,
+    rgba(255,255,255,0.18) 55%,
+    transparent 100%
+  );
+  animation: arrugga-ribbon-tick 1.8s linear infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrugga-shimmer-text,
+  .arrugga-pulse,
+  .arrugga-glow,
+  .arrugga-burst,
+  .arrugga-card-rise,
+  .arrugga-headline-sweep,
+  .arrugga-ribbon-bar::after {
+    animation: none !important;
+  }
+}
