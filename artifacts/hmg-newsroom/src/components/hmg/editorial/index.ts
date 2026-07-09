@@ -5,3 +5,4 @@ export * from "./BreakingStoryCard";
 export * from "./SocialPostsCard";
 export * from "./SavedFactsPanel";
 export * from "./FastPublishPrep";
+export * from "./FounderVoiceGate";
