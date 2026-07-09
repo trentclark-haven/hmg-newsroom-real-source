@@ -1,18 +1,6 @@
 import React, { Suspense, lazy, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Mic,
-  Flame,
-  Music,
-  Trophy,
-  Dumbbell,
-  Leaf,
-  Newspaper,
-  Menu,
-  BarChart3,
-  History,
-  Loader2,
-} from "lucide-react";
+import { Mic, Flame, Music, Trophy, Dumbbell, Leaf, Newspaper, Menu, ChartBar as BarChart3, History, Loader as Loader2 } from "lucide-react";
 import { verticals } from "@/lib/mock-data";
 import { TabContent } from "@/components/newsroom/TabContent";
 import { StatsDashboard } from "@/components/newsroom/StatsDashboard";
@@ -27,6 +15,11 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { viewToModuleId } from "@/lib/hmg/recoveryCenter";
 import { motion } from "framer-motion";
 
+const QuickLaunchView = lazy(() =>
+  import("@/components/newsroom/QuickLaunchView").then((m) => ({
+    default: m.QuickLaunchView,
+  })),
+);
 const SEOMasterView = lazy(() =>
   import("@/components/newsroom/SEOMasterView").then((m) => ({
     default: m.SEOMasterView,
@@ -179,24 +172,44 @@ const iconMap: Record<string, React.ElementType> = {
   Newspaper,
 };
 
+const HMG_LAST_VIEW_KEY = "hmg-last-view-v1";
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState(verticals[0].id);
   const [statsOpen, setStatsOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [view, setView] = useState<View>(() => {
-    if (typeof window === "undefined") return "commandcenter";
+  const [view, setViewState] = useState<View>(() => {
+    if (typeof window === "undefined") return "quicklaunch";
     const requested = new URLSearchParams(window.location.search).get("view");
     if (requested && MENU_ITEMS.some((m) => m.id === requested)) {
       return requested as View;
     }
-    return "commandcenter";
+    const saved = window.localStorage.getItem(HMG_LAST_VIEW_KEY);
+    if (saved && MENU_ITEMS.some((m) => m.id === saved)) {
+      return saved as View;
+    }
+    return "quicklaunch";
   });
+
+  const setView = (v: View) => {
+    setViewState(v);
+    try {
+      window.localStorage.setItem(HMG_LAST_VIEW_KEY, v);
+    } catch {
+      /* ignore quota errors */
+    }
+  };
 
   const activeVertical = verticals.find((v) => v.id === activeTab)!;
   const activeMenu = MENU_ITEMS.find((m) => m.id === view)!;
 
   const navigateTo = (v: string) => setView(v as View);
+
+  const openEditorial = (verticalId: string) => {
+    setActiveTab(verticalId);
+    setView("newsroom");
+  };
 
   // For non-Editorial Desk views, header brand color comes from the menu item.
   const brandColor =
@@ -390,6 +403,12 @@ export default function Home() {
             onOpenHealth={() => setView("recovery")}
           >
           <Suspense fallback={<ViewSpinner />}>
+            {view === "quicklaunch" && (
+              <QuickLaunchView
+                onSelectView={setView}
+                onOpenEditorial={openEditorial}
+              />
+            )}
             {view === "recovery" && <RecoveryCenterView />}
             {view === "commandcenter" && <CommandCenterView onNavigate={setView} />}
             {view === "socialfactory" && <SocialFactoryView />}

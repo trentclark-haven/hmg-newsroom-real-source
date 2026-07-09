@@ -4,36 +4,12 @@ import {
   SheetDescription,
   SheetTitle,
 } from "@/components/ui/sheet";
-import {
-  Activity,
-  Newspaper,
-  Search,
-  Brush,
-  Video,
-  Settings as SettingsIcon,
-  ChevronRight,
-  LayoutDashboard,
-  Megaphone,
-  Film,
-  Users,
-  Image as ImageIcon,
-  CheckSquare,
-  TrendingUp,
-  ScrollText,
-  ShieldAlert,
-  Radio,
-  Database,
-  Brain,
-  HeartPulse,
-  LifeBuoy,
-  BookMarked,
-  FileText,
-  Smartphone,
-} from "lucide-react";
+import { Activity, Newspaper, Search, Brush, Video, Settings as SettingsIcon, ChevronRight, LayoutDashboard, Megaphone, Film, Users, Image as ImageIcon, SquareCheck as CheckSquare, TrendingUp, ScrollText, ShieldAlert, Radio, Database, Brain, HeartPulse, LifeBuoy, BookMarked, FileText, Smartphone, Zap } from "lucide-react";
 import { ROLES, ROLE_LABELS, orderForRole, useRolePreset } from "@/lib/role";
 import { useSafeMode } from "@/lib/safeMode";
 
 export type View =
+  | "quicklaunch"
   | "newsroom"
   | "recovery"
   | "commandcenter"
@@ -70,6 +46,13 @@ export interface MenuItem {
 }
 
 export const MENU_ITEMS: MenuItem[] = [
+  {
+    id: "quicklaunch",
+    label: "Quick Launch",
+    description: "Urgency-first home — jump straight into any desk",
+    icon: Zap,
+    color: "#38BDF8",
+  },
   {
     id: "newsroom",
     label: "Editorial Desk",
