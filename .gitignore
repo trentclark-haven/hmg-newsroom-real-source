@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+.turbo/
+.pnpm-store/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+*.tar.gz
+*.zip
