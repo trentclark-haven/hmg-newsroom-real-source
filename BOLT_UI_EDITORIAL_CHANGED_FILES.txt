@@ -1,0 +1,46 @@
+BOLT_UI_EDITORIAL_CHANGED_FILES.txt
+====================================
+
+Files changed in this reinforcement patch:
+
+1.  src/components/newsroom/QuickLaunchView.tsx
+    — Added status badges (Ready / Needs Setup / Saved Draft / Blocked)
+    — Added max-w-4xl mx-auto for desktop centering
+    — Added responsive grid (1-col mobile, 2-col tablet, 4-col desktop for secondary tiles)
+    — Added timestamp to Resume Last Draft
+    — Added footer hint copy
+    — Improved tile copy (founder-friendly, no dev jargon)
+
+2.  src/components/hmg/editorial/EditorialBrain.tsx
+    — Added save/recover/clear draft persistence via useDraft hook
+    — Added post-from-anywhere flow indicator (Notes → Angle → Sources → Draft → Social → Export)
+    — Improved empty state for Generate step with helpful guidance
+    — Improved disabled-state copy on Generate button
+    — All existing six-step flow, FounderVoiceGate, and intelligence panel preserved
+
+3.  src/components/hmg/editorial/FounderVoiceGate.tsx (NEW — from Task 02)
+    — Premium quality gate with 6 detailed checklist items
+    — Lock/unlock transition with shield iconography
+    — Quality score display alongside gate
+    — Explicit "Check all 6 to unlock" disabled state
+
+4.  src/components/hmg/editorial/index.ts
+    — Added export for FounderVoiceGate
+
+5.  src/components/newsroom/MenuOverlay.tsx
+    — Replaced 19 menu descriptions with founder/operator-friendly language
+    — Removed dev jargon: "packet", "engine", "fallback", "API diagnostics", "local-only",
+      "memory-backed", "PWA check", "service worker", "contract status", "route ping"
+    — Renamed "Backend / API Status" → "Connection Status"
+    — Simplified all descriptions to plain English
+
+6.  src/pages/Home.tsx
+    — Hide stats button above fold on QuickLaunch view
+    — Added "QUICK LAUNCH" / "Haven Media Group" header title for quicklaunch view
+    — Preserved all existing route/default behavior from Task 01
+
+Files NOT changed (explicitly):
+- src/components/newsroom/FounderVoiceCheck.tsx (still used by SocialFactoryView)
+- src/components/newsroom/sales/* (Devin's lane)
+- Any WebEdit/CutMaster source files
+- Any lib/ stub packages

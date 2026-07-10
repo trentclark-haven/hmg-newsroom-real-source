@@ -260,17 +260,21 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-sm font-bold tracking-wide leading-none">
-                {view === "newsroom"
-                  ? "EDITORIAL DESK"
-                  : activeMenu.label.toUpperCase()}
+                {view === "quicklaunch"
+                  ? "QUICK LAUNCH"
+                  : view === "newsroom"
+                    ? "EDITORIAL DESK"
+                    : activeMenu.label.toUpperCase()}
               </h1>
               <p
                 className="text-[10px] font-semibold transition-colors duration-500 uppercase tracking-[0.15em] leading-none mt-1"
                 style={{ color: brandColor }}
               >
-                {view === "newsroom"
-                  ? activeVertical.name
-                  : "Haven Media Group"}
+                {view === "quicklaunch"
+                  ? "Haven Media Group"
+                  : view === "newsroom"
+                    ? activeVertical.name
+                    : "Haven Media Group"}
               </p>
             </div>
           </div>
@@ -284,14 +288,16 @@ export default function Home() {
             >
               <History className="w-5 h-5" />
             </button>
-            <button
-              onClick={() => setStatsOpen(true)}
-              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors"
-              aria-label="Editorial Desk stats"
-              data-testid="header-stats"
-            >
-              <BarChart3 className="w-5 h-5" />
-            </button>
+            {view !== "quicklaunch" && (
+              <button
+                onClick={() => setStatsOpen(true)}
+                className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors"
+                aria-label="Editorial Desk stats"
+                data-testid="header-stats"
+              >
+                <BarChart3 className="w-5 h-5" />
+              </button>
+            )}
             <button
               onClick={() => setMenuOpen(true)}
               className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors"

@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FileText, TriangleAlert as AlertTriangle, Megaphone, PenTool, Sparkles, ChevronRight, Check, Lock, StickyNote, Compass, Database, WandSparkles, Share2, Send, ShieldCheck } from "lucide-react";
+import { FileText, TriangleAlert as AlertTriangle, Megaphone, PenTool, Sparkles, ChevronRight, Check, Lock, StickyNote, Compass, Database, WandSparkles, Share2, Send, ShieldCheck, Save, RotateCcw, ArrowRight } from "lucide-react";
 import { verticals } from "@/lib/mock-data";
 import { getBrandVoiceProfile } from "@/lib/hmg/brandVoiceProfiles";
+import { useDraft } from "@/lib/useDraft";
 import {
   RESEARCH_SECTIONS,
   computeArticleStrength,
@@ -126,6 +127,37 @@ export function EditorialBrain({
   const [socialPkg, setSocialPkg] = useState<SocialPostsPackage | null>(null);
   const [voiceGatePassed, setVoiceGatePassed] = useState(false);
   const [activeStep, setActiveStep] = useState<FlowStep>(1);
+  const [savedDraftTs, setSavedDraftTs] = useState<string | null>(null);
+
+  const draftKey = `hmg-editorial-draft-${brandId}-${mode}`;
+  const [draftState, setDraftState, clearDraft] = useDraft<{
+    sections: ResearchSection[];
+    articleType: ArticleType;
+    tone: ArticleTone;
+    role: ArticleRole;
+    selectedFactIds: string[];
+    activeStep: FlowStep;
+  }>(draftKey, {
+    sections: freshSections(),
+    articleType: "feature",
+    tone: "neutral",
+    role: "managing-editor",
+    selectedFactIds: [],
+    activeStep: 1,
+  });
+
+  const hasSavedDraft = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.localStorage.getItem(`hmg-newsroom-draft::${draftKey}`) !== null;
+    } catch {
+      return false;
+    }
+  }, [draftKey, savedDraftTs]);
+
+  useEffect(() => {
+    setSavedDraftTs(null);
+  }, [brandId, mode]);
 
   const brand = verticals.find((v) => v.id === brandId);
   const profile = getBrandVoiceProfile(brandId);
@@ -142,6 +174,38 @@ export function EditorialBrain({
     setSelectedFactIds((prev) =>
       prev.includes(id) ? prev.filter((x2) => x2 !== id) : [...prev, id],
     );
+
+  const handleSaveDraft = () => {
+    setDraftState({
+      sections,
+      articleType,
+      tone,
+      role,
+      selectedFactIds,
+      activeStep,
+    });
+    setSavedDraftTs(new Date().toLocaleTimeString());
+  };
+
+  const handleRecoverDraft = () => {
+    setSections(draftState.sections);
+    setArticleType(draftState.articleType);
+    setTone(draftState.tone);
+    setRole(draftState.role);
+    setSelectedFactIds(draftState.selectedFactIds);
+    setActiveStep(draftState.activeStep);
+  };
+
+  const handleClearDraft = () => {
+    clearDraft();
+    setSavedDraftTs(null);
+    setSections(freshSections());
+    setArticleType("feature");
+    setTone("neutral");
+    setRole("managing-editor");
+    setSelectedFactIds([]);
+    setActiveStep(1);
+  };
 
   const buildNotes = () => {
     const allFacts = listSavedFacts(brandId);
@@ -308,6 +372,68 @@ export function EditorialBrain({
         </div>
       </div>
 
+      {/* Save / Recover draft bar */}
+      <div className="flex items-center justify-between gap-2 flex-wrap" data-testid="editorial-draft-bar">
+        <div className="flex items-center gap-1.5">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-7 text-[10px] font-bold uppercase tracking-wider rounded-full"
+            onClick={handleSaveDraft}
+            data-testid="editorial-save-draft"
+          >
+            <Save className="w-3 h-3 mr-1" />
+            Save Draft
+          </Button>
+          {hasSavedDraft && (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 text-[10px] font-bold uppercase tracking-wider rounded-full"
+                onClick={handleRecoverDraft}
+                data-testid="editorial-recover-draft"
+              >
+                <RotateCcw className="w-3 h-3 mr-1" />
+                Recover
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 text-[10px] text-muted-foreground hover:text-rose-400"
+                onClick={handleClearDraft}
+                data-testid="editorial-clear-draft"
+              >
+                Clear
+              </Button>
+            </>
+          )}
+        </div>
+        {savedDraftTs && (
+          <span className="text-[9px] text-muted-foreground/60">
+            Saved at {savedDraftTs}
+          </span>
+        )}
+      </div>
+
+      {/* Post-from-anywhere flow indicator */}
+      <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-muted-foreground/50 overflow-x-auto pb-0.5" data-testid="editorial-flow-path">
+        <span>Notes</span>
+        <ArrowRight className="w-2.5 h-2.5" />
+        <span>Angle</span>
+        <ArrowRight className="w-2.5 h-2.5" />
+        <span>Sources</span>
+        <ArrowRight className="w-2.5 h-2.5" />
+        <span>Draft</span>
+        <ArrowRight className="w-2.5 h-2.5" />
+        <span>Social</span>
+        <ArrowRight className="w-2.5 h-2.5" />
+        <span>Export</span>
+      </div>
+
       {/* Step Progress Bar */}
       <div className="flex items-center gap-1 overflow-x-auto pb-1" data-testid="editorial-flow-steps">
         {STEPS.map((s, idx) => {
@@ -448,7 +574,7 @@ export function EditorialBrain({
             </div>
             <p className="text-[12px] text-muted-foreground leading-snug max-w-sm mx-auto">
               {filledCount === 0
-                ? "Paste research notes in Step 1 to unlock generation."
+                ? "Paste research notes in Step 1 to unlock generation. The desk builds from what you provide — no invented facts."
                 : `${filledCount} research section${filledCount === 1 ? "" : "s"} ready · ${selectedFactIds.length} saved fact${selectedFactIds.length === 1 ? "" : "s"} attached`}
             </p>
             <Button
@@ -545,15 +671,23 @@ export function EditorialBrain({
             </div>
           )}
 
-          {/* If no output yet, show back nav */}
+          {/* If no output yet, show helpful empty state + back nav */}
           {!hasOutput && (
-            <StepNav
-              onBack={() => setActiveStep(3)}
-              onNext={undefined}
-              nextLabel={undefined}
-              accent={accent}
-              onAccent={onAccent}
-            />
+            <div className="space-y-3">
+              <div className="rounded-xl border border-dashed border-border/40 bg-background/20 p-4 text-center">
+                <WandSparkles className="w-8 h-8 mx-auto text-muted-foreground/30 mb-2" />
+                <p className="text-[12px] text-muted-foreground leading-snug">
+                  Your generated draft will appear here. Click the button above to build it from your notes and facts.
+                </p>
+              </div>
+              <StepNav
+                onBack={() => setActiveStep(3)}
+                onNext={undefined}
+                nextLabel={undefined}
+                accent={accent}
+                onAccent={onAccent}
+              />
+            </div>
           )}
         </div>
       )}
