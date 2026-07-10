@@ -88,6 +88,63 @@ const ROLE_OPTIONS: { id: ArticleRole; label: string }[] = [
   { id: "columnist", label: "Columnist" },
 ];
 
+const ARTICLE_TYPE_GUIDANCE: Record<ArticleType, string> = {
+  news: "Who, what, when, where, why. Lead with the fact. One source minimum.",
+  feature: "Find the human angle. Why does this matter now? Context and color.",
+  review: "Clear verdict, specific evidence, fair criticism. No vague thumbs-up.",
+  analysis: "Break down what it means, not just what happened. Show your work.",
+  explainer: "Make the complex simple. If a new reader can't follow, rewrite.",
+  "interview-recap": "Capture the voice. Best quotes first. Context around each answer.",
+  list: "Each entry must earn its spot. Rank with reason, not just number.",
+  opinion: "Strong stance, supported by evidence. No hedging — own the take.",
+};
+
+const EDITORIAL_DNA: Record<string, { what: string; great: string; caution: string }> = {
+  hiphophaven: {
+    what: "Elite hip-hop editorial judgment with historical depth.",
+    great: "Great means: cultural context that earned its place, references that show real listening, and credibility that holds up to scrutiny.",
+    caution: "Avoid: surface-level takes, recycled narratives, performative slang.",
+  },
+  raphaven: {
+    what: "Sharp rap coverage with rankings, debates, and release urgency.",
+    great: "Great means: clean arguments, real listening evidence, and the confidence to rank without fear.",
+    caution: "Avoid: vague praise, listless recaps, fence-sitting on debates.",
+  },
+  musichaven: {
+    what: "Broad music-programming instincts with rollout intelligence.",
+    great: "Great means: spotting the rollout story, feeling the video-era energy, and finding artists before the crowd.",
+    caution: "Avoid: genre tunnel vision, missing the visual rollout, late discovery.",
+  },
+  cannahaven: {
+    what: "Cannabis culture literacy with strain, legal, and safety discipline.",
+    great: "Great means: accurate strain info, legal context, safety-first language, and sources that hold up.",
+    caution: "Avoid: unverified health claims, legal vagueness, uncredited sources.",
+  },
+  fithaven: {
+    what: "Motivational fitness energy with wellness clarity and training sense.",
+    great: "Great means: training that's safe and real, nutrition that's grounded, and motivation that doesn't condescend.",
+    caution: "Avoid: unverified fitness claims, shame-based motivation, vague advice.",
+  },
+  sportshaven: {
+    what: "Sports urgency with clean storytelling and what-matters-now clarity.",
+    great: "Great means: the highlight leads, the context follows, and the reader knows what matters right now.",
+    caution: "Avoid: stale angles, buried ledes, stat dumps without story.",
+  },
+  hmg: {
+    what: "Fast entertainment-news instincts with source discipline and legal caution.",
+    great: "Great means: fast but accurate, sourced but not gossip, clear about what's confirmed and what's not.",
+    caution: "Avoid: unverified rumors, gossip slop, reckless legal exposure.",
+  },
+};
+
+const SOURCE_DISCIPLINE_FIELDS = [
+  { id: "confirmed", label: "What is confirmed?", placeholder: "Facts you can stand behind — verified, sourced, no hedging needed." },
+  { id: "needs-verification", label: "What still needs verification?", placeholder: "Claims you're not sure about yet. Flag them so they don't slip into the draft." },
+  { id: "safest-wording", label: "What is the safest wording?", placeholder: "If a claim is sensitive, how should it be phrased to avoid legal or credibility risk?" },
+  { id: "source-attribution", label: "Who or what is the source?", placeholder: "Name the source. If anonymous, explain why. No unnamed 'insiders' without context." },
+  { id: "rights-credit", label: "Rights / credit note", placeholder: "Photo credit, quote permission, copyright note. Don't skip this." },
+];
+
 type FlowStep = 1 | 2 | 3 | 4 | 5 | 6;
 
 const STEPS: { id: FlowStep; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -474,6 +531,35 @@ export function EditorialBrain({
         })}
       </div>
 
+      {/* Editorial DNA panel — brand-aware guidance */}
+      <div
+        className="rounded-xl border border-border/30 bg-card/30 p-3"
+        data-testid="editorial-dna-panel"
+      >
+        <div className="flex items-center gap-2 mb-1.5">
+          <Compass className="w-3.5 h-3.5 shrink-0" style={{ color: accent }} />
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: accent }}>
+            {brand?.name ?? "HMG"} Editorial DNA
+          </span>
+        </div>
+        {(() => {
+          const dna = EDITORIAL_DNA[brandId] ?? EDITORIAL_DNA.hmg;
+          return (
+            <div className="space-y-1">
+              <p className="text-[11px] text-muted-foreground leading-snug">{dna.what}</p>
+              <p className="text-[11px] text-foreground/80 leading-snug">{dna.great}</p>
+              <p className="text-[10px] text-muted-foreground/60 leading-snug">{dna.caution}</p>
+            </div>
+          );
+        })()}
+        {mode === "article" && (
+          <p className="text-[10px] text-muted-foreground/50 leading-snug mt-1.5 pt-1.5 border-t border-border/20">
+            <span className="font-bold">{ARTICLE_TYPE_OPTIONS.find((t) => t.id === articleType)?.label ?? articleType}:</span>{" "}
+            {ARTICLE_TYPE_GUIDANCE[articleType] ?? ""}
+          </p>
+        )}
+      </div>
+
       {/* Step Content — only render the active step */}
       {activeStep === 1 && (
         <ResearchIntake
@@ -540,6 +626,28 @@ export function EditorialBrain({
 
       {activeStep === 3 && (
         <div className="space-y-3" data-testid="editorial-sources-step">
+          {/* Source discipline fields */}
+          <div
+            className="rounded-xl border border-border/30 bg-card/30 p-3 space-y-2.5"
+            data-testid="editorial-source-discipline"
+          >
+            <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">
+              Source Discipline
+            </p>
+            {SOURCE_DISCIPLINE_FIELDS.map((field) => (
+              <div key={field.id}>
+                <label className="block text-[11px] font-bold text-foreground/80 mb-1">
+                  {field.label}
+                </label>
+                <textarea
+                  className="w-full rounded-lg border border-border/40 bg-background/50 px-3 py-2 text-[12px] text-foreground placeholder:text-muted-foreground/40 resize-none focus:outline-none focus:border-border transition-colors"
+                  rows={2}
+                  placeholder={field.placeholder}
+                  data-testid={`source-discipline-${field.id}`}
+                />
+              </div>
+            ))}
+          </div>
           <SavedFactsPanel
             brand={brandId}
             accent={accent}
@@ -592,6 +700,41 @@ export function EditorialBrain({
               <Sparkles className="w-4 h-4 mr-2" />
               {buildLabel}
             </Button>
+          </div>
+
+          {/* Quality meter — pre-generation readiness assessment */}
+          <div
+            className="rounded-xl border border-border/30 bg-card/30 p-3"
+            data-testid="editorial-quality-meter"
+          >
+            <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground mb-2">
+              Quality Meter
+            </p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+              {[
+                { label: "Notes Strength", value: Math.min(100, filledCount * 25), hint: filledCount === 0 ? "Add notes in Step 1" : `${filledCount} section${filledCount === 1 ? "" : "s"}` },
+                { label: "Source Confidence", value: Math.min(100, selectedFactIds.length * 20), hint: selectedFactIds.length === 0 ? "Attach facts in Step 3" : `${selectedFactIds.length} fact${selectedFactIds.length === 1 ? "" : "s"}` },
+                { label: "Brand Voice Fit", value: profile ? 50 : 0, hint: profile ? "Profile loaded" : "No profile" },
+                { label: "Publish Readiness", value: hasOutput ? 75 : 0, hint: hasOutput ? "Draft generated" : "Not generated" },
+                { label: "Social Readiness", value: socialPkg ? 80 : 0, hint: socialPkg ? "Social pack built" : "Not built" },
+              ].map((metric) => (
+                <div key={metric.label} className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] text-muted-foreground/70">{metric.label}</span>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-16 h-1.5 rounded-full bg-muted/30 overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${metric.value}%`,
+                          background: metric.value >= 70 ? "rgb(16 185 129)" : metric.value >= 40 ? "rgb(245 158 11)" : "rgb(244 63 94)",
+                        }}
+                      />
+                    </div>
+                    <span className="text-[9px] text-muted-foreground/50 w-16 truncate">{metric.hint}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Output — destination panel */}
@@ -754,7 +897,50 @@ export function EditorialBrain({
                   Founder Voice check complete. Export your draft to WordPress or copy to clipboard.
                 </p>
               </div>
+              {/* Handoff destinations */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { label: "Article Package", icon: FileText, ready: true },
+                  { label: "Social Package", icon: Megaphone, ready: Boolean(socialPkg) },
+                  { label: "WebArt Handoff", icon: Sparkles, ready: true },
+                  { label: "WebEdit Handoff", icon: PenTool, ready: true },
+                ].map((dest) => {
+                  const Icon = dest.icon;
+                  return (
+                    <div
+                      key={dest.label}
+                      className={`rounded-lg border p-2.5 text-center ${dest.ready ? "border-border/40 bg-card/40" : "border-dashed border-border/30 bg-background/20"}`}
+                    >
+                      <Icon className={`w-4 h-4 mx-auto mb-1 ${dest.ready ? "" : "text-muted-foreground/30"}`} style={dest.ready ? { color: accent } : undefined} />
+                      <p className={`text-[10px] font-bold ${dest.ready ? "text-foreground/80" : "text-muted-foreground/40"}`}>
+                        {dest.label}
+                      </p>
+                      <p className="text-[9px] text-muted-foreground/50 mt-0.5">
+                        {dest.ready ? "Ready" : "Not built"}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
             </>
+          ) : articlePkg && !voiceGatePassed ? (
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-center">
+              <ShieldCheck className="w-8 h-8 mx-auto text-amber-500/60" />
+              <p className="text-[13px] font-bold text-amber-600 dark:text-amber-400 mt-2">
+                Founder Review Needed
+              </p>
+              <p className="text-[11px] text-muted-foreground mt-1 max-w-sm mx-auto">
+                Your draft is ready but hasn't passed the Founder Voice Quality Gate. Go back to Step 4, review the checklist, and unlock export.
+              </p>
+              <Button
+                type="button"
+                onClick={() => setActiveStep(4)}
+                variant="outline"
+                className="h-9 px-4 text-[12px] mt-3 rounded-full"
+              >
+                Back to Draft
+              </Button>
+            </div>
           ) : (
             <div className="rounded-xl border border-border/40 bg-background/30 p-4 text-center">
               <Lock className="w-8 h-8 mx-auto text-muted-foreground/40" />
@@ -906,20 +1092,20 @@ function ArticleIntelligencePanel({
             Article Quality Receipt
           </h4>
           <p className="mt-1 text-[11px] text-muted-foreground">
-            Local deterministic scoring. No outside provider call needed.
+            Local scoring. No external calls needed.
           </p>
         </div>
         <div className="flex flex-wrap gap-1.5">
           <CopyButton
             textToCopy={formatFounderVoicePacket()}
             label="Founder Voice"
-            successMessage="Founder Voice Packet copied"
+            successMessage="Founder Voice summary copied"
             className="h-8 text-[11px]"
           />
           <CopyButton
             textToCopy={formatBrandVoicePacket(brand)}
             label="Brand Voice"
-            successMessage="Brand Voice Packet copied"
+            successMessage="Brand Voice summary copied"
             className="h-8 text-[11px]"
           />
           <CopyButton

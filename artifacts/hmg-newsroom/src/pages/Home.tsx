@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mic, Flame, Music, Trophy, Dumbbell, Leaf, Newspaper, Menu, ChartBar as BarChart3, History, Loader as Loader2 } from "lucide-react";
+import { Mic, Flame, Music, Trophy, Dumbbell, Leaf, Newspaper, Menu, ChartBar as BarChart3, History, Loader as Loader2, Zap } from "lucide-react";
 import { verticals } from "@/lib/mock-data";
 import { TabContent } from "@/components/newsroom/TabContent";
 import { StatsDashboard } from "@/components/newsroom/StatsDashboard";
@@ -254,6 +254,8 @@ export default function Home() {
                 <span className="font-black tracking-tight text-[11px]">
                   HMG
                 </span>
+              ) : view === "quicklaunch" ? (
+                <Zap className="w-5 h-5" />
               ) : (
                 <activeMenu.icon className="w-5 h-5" />
               )}

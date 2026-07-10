@@ -1,0 +1,53 @@
+BOLT_VIBRANIUM_CHANGED_FILES.txt
+================================
+
+Files changed in the Vibranium reinforcement pass:
+
+1. src/components/newsroom/QuickLaunchView.tsx
+   — Added "What are we shipping right now?" hero line
+   — Added "Fast Lane" strip: Notes → Draft → Visual → Clip → Social → WordPress
+   — Added 6 honest statuses: Ready, Needs Setup, Saved Draft, Needs Media, Review First, Blocked
+   — Added helper text + "unlocks/needs" on every tile
+   — Added brand name to Resume Last Draft
+   — Added aria-labels on all interactive elements
+   — Mobile-first responsive: 1-col mobile, 2-col tablet, 4-col desktop
+   — No stats board above fold, no dev jargon
+
+2. src/components/hmg/editorial/EditorialBrain.tsx
+   — Added Editorial DNA panel with brand-aware guidance per Haven silo
+   — Added ARTICLE_TYPE_GUIDANCE for 8 article types
+   — Added Source Discipline fields (5 fields: confirmed, needs-verification, safest-wording, source-attribution, rights-credit)
+   — Added Quality Meter (5 metrics: Notes Strength, Source Confidence, Brand Voice Fit, Publish Readiness, Social Readiness)
+   — Added handoff destinations grid in Step 6 (Article, Social, WebArt, WebEdit)
+   — Added "Founder Review Needed" honest state when draft exists but gate not passed
+   — Replaced "packet" and "provider" in visible copy with plain English
+   — All existing six-step flow, save/recover draft, flow indicator preserved
+
+3. src/components/hmg/editorial/FounderVoiceGate.tsx
+   — Expanded from 6 to 8 detailed quality checks
+   — Added "Why this matters" expandable helper text (double-tap to reveal)
+   — Added progress bar showing completion percentage
+   — Added "Ready for Founder Review" premium confirmation state
+   — Added quality score badge alongside gate
+   — Added silo-aware wording (uses siloName in voice-matches-brand check)
+   — localStorage persistence with try/catch safety
+   — Export lock only — does not block basic drafting
+
+4. src/components/newsroom/MenuOverlay.tsx
+   — Renamed menu groups: Ship Now / Create Assets / Intelligence / Operations
+   — All 19 descriptions already rewritten in previous pass — preserved
+   — All View IDs unchanged — zero route breaks
+   — stationscheduler restored to Create Assets group
+
+5. src/pages/Home.tsx
+   — Added Zap icon import for QuickLaunch header
+   — QuickLaunch header shows Zap icon instead of activeMenu.icon
+   — Stats button hidden on QuickLaunch (from previous pass — preserved)
+   — Header title shows "QUICK LAUNCH" / "Haven Media Group" (from previous pass — preserved)
+
+Files NOT changed:
+- src/components/hmg/editorial/index.ts (already exports FounderVoiceGate from previous pass)
+- src/components/newsroom/FounderVoiceCheck.tsx (still used by SocialFactoryView)
+- Any WebEdit/CutMaster source files
+- Any WebArt/ArtBot source files
+- Any lib/ stub packages

@@ -1,5 +1,17 @@
 import { useState } from "react";
-import { CircleCheck as CheckCircle2, Circle, ShieldCheck, Lock, Mic, CircleAlert as AlertCircle } from "lucide-react";
+import {
+  CircleCheck as CheckCircle2,
+  Circle,
+  ShieldCheck,
+  Lock,
+  Mic,
+  CircleAlert as AlertCircle,
+  Eye,
+  FileCheck,
+  Megaphone,
+  Globe,
+  PenLine,
+} from "lucide-react";
 
 interface FounderVoiceGateProps {
   brandColor: string;
@@ -16,38 +28,66 @@ interface GateItem {
   id: string;
   label: string;
   detail: string;
+  why: string;
+  icon: typeof ShieldCheck;
 }
 
 const GATE_ITEMS: GateItem[] = [
   {
-    id: "cultural",
+    id: "source-confirmed",
+    label: "Source is confirmed",
+    detail: "Every fact in the draft traces back to a named source or verified note. No unnamed 'insiders' without context.",
+    why: "Unverified sources create legal exposure and credibility risk. If you can't name it, flag it.",
+    icon: FileCheck,
+  },
+  {
+    id: "no-unsupported-claims",
+    label: "No unsupported claims",
+    detail: "Numbers, dates, names, and quotes all match the source notes. Nothing was invented or embellished.",
+    why: "One wrong number destroys trust in the entire piece. Check every claim against your notes.",
+    icon: ShieldCheck,
+  },
+  {
+    id: "headline-strong-not-reckless",
+    label: "Headline is strong but not reckless",
+    detail: "The headline grabs attention without overstating, misleading, or creating legal exposure.",
+    why: "A reckless headline can trigger a takedown, a lawsuit, or a credibility hit that lasts for years.",
+    icon: PenLine,
+  },
+  {
+    id: "voice-matches-brand",
+    label: "Voice matches the brand",
+    detail: `Reads like ${"{silo}"}, not generic copy. The tone, references, and cultural fluency fit the vertical.`,
+    why: "Each Haven brand has its own DNA. A hip-hop voice in a fitness article feels wrong, and vice versa.",
+    icon: Mic,
+  },
+  {
+    id: "social-package-ready",
+    label: "Social package is ready",
+    detail: "Social posts are written, platform-appropriate, and match the article's tone and facts.",
+    why: "Social is where the article lives or dies. If the posts aren't ready, the package isn't done.",
+    icon: Megaphone,
+  },
+  {
+    id: "export-package-clean",
+    label: "WordPress / export package is clean",
+    detail: "The export has a title, body, excerpt, categories, and tags. No placeholder text or broken formatting.",
+    why: "A messy export means manual cleanup in WordPress, which costs time and invites errors.",
+    icon: Globe,
+  },
+  {
+    id: "cultural-fluency",
     label: "Cultural fluency reads true",
-    detail: "Not surface-level. The references, slang, and context match how {silo} actually talks.",
+    detail: "References, slang, and context match how the community actually talks. Not surface-level or performative.",
+    why: "Readers can tell when a writer doesn't know the culture. One fake reference loses them forever.",
+    icon: Eye,
   },
   {
-    id: "no-ai",
+    id: "no-generic-ai-phrasing",
     label: "No generic AI phrasing",
-    detail: "No 'in conclusion', 'delve', 'it's worth noting', or other AI tells.",
-  },
-  {
-    id: "first-line",
-    label: "Strong first sentence",
-    detail: "Hooks immediately. No throat-clearing or generic setup.",
-  },
-  {
-    id: "facts",
-    label: "Facts preserved exactly",
-    detail: "Every number, name, and date matches the source notes. Nothing invented.",
-  },
-  {
-    id: "no-fake-slang",
-    label: "No fake slang or stereotypes",
-    detail: "No forced/performative language. If the voice doesn't fit, rewrite — don't fake it.",
-  },
-  {
-    id: "silo-fit",
-    label: "Tone matches the brand",
-    detail: "Reads like {silo}, not Trent-bot copy-paste applied to every silo.",
+    detail: "No 'in conclusion', 'delve', 'it's worth noting', or other AI tells. The writing sounds human.",
+    why: "AI tells signal lazy work. Readers and editors catch them instantly, and they undercut everything else.",
+    icon: PenLine,
   },
 ];
 
@@ -86,6 +126,7 @@ export function FounderVoiceGate({
   const [state, setState] = useState<Record<string, boolean>>(() =>
     readState(storageKey),
   );
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
 
   const toggle = (id: string) => {
     setState((prev) => {
@@ -96,7 +137,9 @@ export function FounderVoiceGate({
   };
 
   const completed = GATE_ITEMS.filter((i) => state[i.id]).length;
-  const allPassed = completed === GATE_ITEMS.length;
+  const total = GATE_ITEMS.length;
+  const allPassed = completed === total;
+  const progressPct = Math.round((completed / total) * 100);
 
   return (
     <div
@@ -111,7 +154,7 @@ export function FounderVoiceGate({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center"
+            className="w-8 h-8 rounded-xl flex items-center justify-center transition-all"
             style={{ background: passed ? brandColor : "rgb(128 128 128 / 0.2)" }}
           >
             {passed ? (
@@ -130,7 +173,7 @@ export function FounderVoiceGate({
             <p className="text-[10px] text-muted-foreground">
               {passed
                 ? "Article cleared for export"
-                : "Pass all 6 checks to unlock WordPress / Export"}
+                : `Pass all ${total} checks to unlock WordPress / Export`}
             </p>
           </div>
         </div>
@@ -150,52 +193,84 @@ export function FounderVoiceGate({
             className="text-[10px] font-bold uppercase tracking-wider"
             style={{ color: allPassed ? brandColor : "rgb(128 128 128 / 0.6)" }}
           >
-            {completed}/{GATE_ITEMS.length}
+            {completed}/{total}
           </span>
         </div>
       </div>
 
-      {/* Gate items — premium checklist */}
+      {/* Progress bar */}
+      {!passed && (
+        <div className="mb-3 h-1.5 rounded-full bg-muted/30 overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{
+              width: `${progressPct}%`,
+              background: allPassed ? brandColor : "rgb(245 158 11)",
+            }}
+          />
+        </div>
+      )}
+
+      {/* Gate items — premium checklist with expandable why-this-matters */}
       {!passed && (
         <>
-          <div className="space-y-1.5 mb-3">
+          <div className="space-y-1 mb-3">
             {GATE_ITEMS.map((item) => {
               const done = Boolean(state[item.id]);
+              const isExpanded = expandedItem === item.id;
+              const ItemIcon = item.icon;
               return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => toggle(item.id)}
-                  data-testid={`founder-voice-gate-${item.id}`}
-                  aria-pressed={done}
-                  className="w-full flex items-start gap-2.5 text-left py-1.5 px-2 rounded-lg hover:bg-foreground/5 transition-colors"
-                >
-                  {done ? (
-                    <CheckCircle2
-                      className="w-4 h-4 mt-0.5 shrink-0"
-                      style={{ color: brandColor }}
-                    />
-                  ) : (
-                    <Circle className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground/40" />
+                <div key={item.id}>
+                  <button
+                    type="button"
+                    onClick={() => toggle(item.id)}
+                    onDoubleClick={() => setExpandedItem(isExpanded ? null : item.id)}
+                    data-testid={`founder-voice-gate-${item.id}`}
+                    aria-pressed={done}
+                    className="w-full flex items-start gap-2.5 text-left py-1.5 px-2 rounded-lg hover:bg-foreground/5 transition-colors"
+                  >
+                    {done ? (
+                      <CheckCircle2
+                        className="w-4 h-4 mt-0.5 shrink-0"
+                        style={{ color: brandColor }}
+                      />
+                    ) : (
+                      <Circle className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground/40" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <ItemIcon className={`w-3 h-3 shrink-0 ${done ? "text-foreground/40" : "text-muted-foreground/60"}`} />
+                        <span
+                          className={`text-[12px] font-bold ${done ? "text-foreground/50 line-through" : "text-foreground/90"}`}
+                        >
+                          {item.label}
+                        </span>
+                      </div>
+                      <span className="block text-[10px] text-muted-foreground/70 leading-snug mt-0.5">
+                        {item.detail.replace("{silo}", siloName)}
+                      </span>
+                    </div>
+                  </button>
+                  {isExpanded && (
+                    <div className="ml-7 mb-1.5 rounded-lg bg-amber-500/5 border border-amber-500/20 px-3 py-2">
+                      <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-0.5">
+                        Why this matters
+                      </p>
+                      <p className="text-[10px] text-muted-foreground leading-snug">
+                        {item.why}
+                      </p>
+                    </div>
                   )}
-                  <div className="min-w-0 flex-1">
-                    <span
-                      className={`block text-[12px] font-bold ${
-                        done ? "text-foreground/50 line-through" : "text-foreground/90"
-                      }`}
-                    >
-                      {item.label}
-                    </span>
-                    <span className="block text-[10px] text-muted-foreground/70 leading-snug mt-0.5">
-                      {item.detail.replace("{silo}", siloName)}
-                    </span>
-                  </div>
-                </button>
+                </div>
               );
             })}
           </div>
 
-          {/* Unlock button — only enabled when all items are checked */}
+          <p className="text-[9px] text-muted-foreground/40 text-center mb-2">
+            Double-tap any check to see why it matters
+          </p>
+
+          {/* Unlock button */}
           <button
             type="button"
             onClick={onPass}
@@ -220,7 +295,7 @@ export function FounderVoiceGate({
             ) : (
               <>
                 <Lock className="w-4 h-4" />
-                Check all {GATE_ITEMS.length} to unlock
+                Check all {total} to unlock
               </>
             )}
           </button>
@@ -234,13 +309,27 @@ export function FounderVoiceGate({
         </>
       )}
 
-      {/* Passed state — compact confirmation */}
+      {/* Passed state — premium confirmation */}
       {passed && (
-        <div className="flex items-center gap-2 py-1">
-          <ShieldCheck className="w-4 h-4 shrink-0" style={{ color: brandColor }} />
-          <p className="text-[12px] font-semibold" style={{ color: brandColor }}>
-            All {GATE_ITEMS.length} checks passed. Export unlocked.
-          </p>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 py-1">
+            <ShieldCheck className="w-4 h-4 shrink-0" style={{ color: brandColor }} />
+            <p className="text-[12px] font-semibold" style={{ color: brandColor }}>
+              All {total} checks passed. Export unlocked.
+            </p>
+          </div>
+          <div
+            className="rounded-lg border p-2.5 text-center"
+            style={{ borderColor: `${brandColor}30`, background: `${brandColor}05` }}
+          >
+            <Eye className="w-5 h-5 mx-auto mb-1" style={{ color: brandColor }} />
+            <p className="text-[11px] font-bold" style={{ color: brandColor }}>
+              Ready for Founder Review
+            </p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">
+              All quality checks passed. The founder can review and publish with confidence.
+            </p>
+          </div>
         </div>
       )}
     </div>
