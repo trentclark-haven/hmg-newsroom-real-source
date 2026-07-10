@@ -1,0 +1,37 @@
+# BOLT FINAL PREMIUM EDITORIAL INTELLIGENCE PATCH
+# This is a synthetic diff — the Bolt environment has no git repo.
+# Use the apply docs (BOLT_FINAL_PREMIUM_APPLY_IN_DR_REPLIT.md) for manual application.
+# All files are included in the tarball package.
+
+--- /dev/null
++++ b/src/lib/hmg/editorial/editorialPlaybooks.ts
+@@ -0,0 +1,Full file @@
++ See: src/lib/hmg/editorial/editorialPlaybooks.ts in tarball
++ (23035 bytes — vertical editorial playbook system with 7 silos, 11 angles, source discipline)
+
+--- a/src/components/hmg/editorial/EditorialBrain.tsx
++++ b/src/components/hmg/editorial/EditorialBrain.tsx
+@@ -1,3 +1,5 @@
++import { getPlaybook, getAngleGuidance, type AngleType } from "@/lib/hmg/editorial/editorialPlaybooks";
++import { ChevronDown, BookOpen, AlertOctagon, FileSearch, Hash, Palette, Scissors, Globe as GlobeIcon, Eye } from "lucide-react";
+ (existing imports remain)
+@@ -161,6 +163,170 @@
++function HmgStandardPanel({ ... }) { ... }
+ (HmgStandardPanel component added before EditorialBrain export)
+@@ -535,20 +700,1 @@
+- {/* Editorial DNA panel — brand-aware guidance */}
+- <div className="rounded-xl border ..."> ... </div>
++ {/* HMG Standard — premium editorial intelligence panel */}
++ <HmgStandardPanel brandId={brandId} brandName={brand?.name ?? "HMG"} accent={accent} mode={mode} articleType={articleType} strength={strength} hasOutput={hasOutput} voiceGatePassed={voiceGatePassed} />
+
+--- a/src/components/hmg/editorial/FounderVoiceGate.tsx
++++ b/src/components/hmg/editorial/FounderVoiceGate.tsx
+@@ -1,Full file @@
+- (previous 3-check version)
++ (new 10-check final-boss editorial lock with progress bar, expandable why-this-matters, aria labels, gateStatus export)
+
+--- a/src/components/newsroom/QuickLaunchView.tsx
++++ b/src/components/newsroom/QuickLaunchView.tsx
+@@ -1,Full file @@
+- (previous version)
++ (new executive command energy version with Today's Command Path, Fast Lane, status row, resume tile, draft count)

@@ -18,9 +18,16 @@ import {
   Scissors,
   Globe,
   ChevronRight,
+  NotebookPen,
+  Images,
+  RotateCcw,
+  Globe as GlobeIcon,
+  ListChecks,
+  Sparkles,
 } from "lucide-react";
 import { verticals } from "@/lib/mock-data";
 import { useOutputHistory } from "@/lib/useOutputHistory";
+import { useWPSettings } from "@/lib/useWPSettings";
 import type { View } from "./MenuOverlay";
 
 interface QuickLaunchViewProps {
@@ -74,12 +81,23 @@ const FAST_LANE_STEPS = [
   { label: "WordPress", icon: Globe },
 ];
 
+const COMMAND_PATH_ITEMS = [
+  { label: "Start from notes", icon: NotebookPen, view: "newsroom" as View, hint: "Open the Editorial Desk with a blank canvas" },
+  { label: "Start from media", icon: Images, view: "medialibrary" as View, hint: "Browse saved outputs and build from there" },
+  { label: "Resume saved work", icon: RotateCcw, view: "medialibrary" as View, hint: "Pick up where you left off" },
+  { label: "Prepare WordPress draft", icon: GlobeIcon, view: "wp-draft-history" as View, hint: "Export a ready-to-publish WordPress draft" },
+];
+
 export function QuickLaunchView({
   onSelectView,
   onOpenEditorial,
 }: QuickLaunchViewProps) {
   const { entries } = useOutputHistory();
+  const { creds: wpCreds } = useWPSettings(verticals[0]?.id ?? "hmg");
   const lastDraft = entries[0];
+  const wpConnected = Boolean(wpCreds?.url && wpCreds?.user);
+
+  const draftCount = useMemo(() => entries.length, [entries]);
 
   const lastDraftLabel = useMemo(() => {
     if (!lastDraft) return null;
@@ -113,13 +131,13 @@ export function QuickLaunchView({
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto px-4 lg:px-8 py-4 max-w-4xl mx-auto w-full">
-      {/* Hero line */}
+      {/* Hero line — answers "What are we shipping right now?" */}
       <div className="mb-4">
         <h2 className="text-lg sm:text-xl font-black tracking-tight leading-tight">
           What are we shipping right now?
         </h2>
         <p className="text-[12px] text-muted-foreground mt-1 leading-snug">
-          Pick a brand to start writing, or choose a desk below. Everything saves automatically — resume any time.
+          Pick a brand to start writing, or choose a command below. Everything saves automatically — resume any time.
         </p>
       </div>
 
@@ -154,7 +172,35 @@ export function QuickLaunchView({
         </div>
       </div>
 
-      {/* Fast Lane strip — post-from-anywhere path */}
+      {/* Today's Command Path — answers "What do I click first?" */}
+      <div className="mb-4">
+        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-2 flex items-center gap-1.5">
+          <Zap className="w-3 h-3" />
+          Today's Command Path
+        </p>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+          {COMMAND_PATH_ITEMS.map((cmd) => {
+            const Icon = cmd.icon;
+            return (
+              <motion.button
+                key={cmd.label}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => onSelectView(cmd.view)}
+                className="flex flex-col items-start gap-1.5 p-3 rounded-xl border border-border/40 bg-card/50 hover:bg-card hover:border-border transition-all text-left group"
+                aria-label={`${cmd.label} — ${cmd.hint}`}
+              >
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-foreground/5 group-hover:bg-foreground/10 transition-colors">
+                  <Icon className="w-3.5 h-3.5 text-foreground/70" />
+                </div>
+                <span className="text-[11px] font-bold leading-tight">{cmd.label}</span>
+                <span className="text-[9px] text-muted-foreground/60 leading-snug">{cmd.hint}</span>
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Fast Lane strip — publishing path */}
       <div
         className="mb-4 flex items-center gap-1.5 overflow-x-auto pb-1 rounded-xl border border-border/30 bg-card/30 px-3 py-2.5"
         data-testid="quicklaunch-fast-lane"
@@ -177,6 +223,25 @@ export function QuickLaunchView({
             </div>
           );
         })}
+      </div>
+
+      {/* Status row — answers "What is ready?" and "What is blocked?" */}
+      <div className="mb-3 flex flex-wrap gap-2">
+        <StatusChip
+          icon={CheckCircle2}
+          label="Editorial Desk"
+          status="ready"
+        />
+        <StatusChip
+          icon={wpConnected ? CheckCircle2 : AlertCircle}
+          label={wpConnected ? "WordPress Connected" : "WordPress Needs Setup"}
+          status={wpConnected ? "ready" : "needs-setup"}
+        />
+        <StatusChip
+          icon={draftCount > 0 ? Clock : AlertCircle}
+          label={draftCount > 0 ? `${draftCount} Saved Draft${draftCount === 1 ? "" : "s"}` : "No Saved Drafts"}
+          status={draftCount > 0 ? "saved-draft" : "needs-setup"}
+        />
       </div>
 
       {/* Primary tiles — Breaking + Article */}
@@ -235,17 +300,24 @@ export function QuickLaunchView({
           title="WordPress Draft"
           subtitle="Build and save a WordPress-ready draft."
           color="#F59E0B"
-          status={lastDraft ? "saved-draft" : "needs-setup"}
-          helper={lastDraft ? "Last draft saved — resume or export" : "Connect WordPress to enable publishing"}
+          status={wpConnected ? (lastDraft ? "saved-draft" : "ready") : "needs-setup"}
+          helper={
+            wpConnected
+              ? lastDraft
+                ? "Last draft saved — resume or export"
+                : "Ready to build a WordPress draft"
+              : "Connect WordPress to enable publishing"
+          }
           onClick={() => onSelectView("wp-draft-history")}
         />
       </div>
 
-      {/* Resume Last Draft */}
+      {/* Resume Last Draft — answers "What can I resume?" */}
       <ResumeTile
         label={lastDraftLabel}
         time={lastDraftTime}
         brand={lastDraftBrand}
+        draftCount={draftCount}
         onClick={() => {
           if (!lastDraft) {
             onSelectView("newsroom");
@@ -261,6 +333,27 @@ export function QuickLaunchView({
         Haven Media Group · Field-publishing cockpit · Save any time, resume any time
       </p>
     </div>
+  );
+}
+
+function StatusChip({
+  icon: Icon,
+  label,
+  status,
+}: {
+  icon: typeof CheckCircle2;
+  label: string;
+  status: TileStatus;
+}) {
+  const badge = statusBadge(status);
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-border/40 bg-card/40 text-[10px] font-bold ${badge.cls}`}
+      aria-label={label}
+    >
+      <Icon className="w-3 h-3" />
+      {label}
+    </span>
   );
 }
 
@@ -378,11 +471,13 @@ function ResumeTile({
   label,
   time,
   brand,
+  draftCount,
   onClick,
 }: {
   label: string | null;
   time: string | null;
   brand: string | null;
+  draftCount: number;
   onClick: () => void;
 }) {
   return (
@@ -394,7 +489,14 @@ function ResumeTile({
     >
       <PlayCircle className="w-6 h-6 text-sky-500 shrink-0" />
       <div className="min-w-0 flex-1">
-        <h3 className="text-sm font-bold">Resume Last Draft</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-bold">Resume Last Draft</h3>
+          {draftCount > 0 && (
+            <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-sky-500/15 text-sky-600 dark:text-sky-400">
+              {draftCount} total
+            </span>
+          )}
+        </div>
         <p className="text-[11px] text-muted-foreground truncate">
           {label
             ? `Continue: ${label}${brand ? ` · ${brand}` : ""}${time ? ` · ${time}` : ""}`

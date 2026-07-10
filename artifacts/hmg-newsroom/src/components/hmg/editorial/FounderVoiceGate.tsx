@@ -11,6 +11,10 @@ import {
   Megaphone,
   Globe,
   PenLine,
+  Newspaper,
+  Link2,
+  Sparkles,
+  ChevronDown,
 } from "lucide-react";
 
 interface FounderVoiceGateProps {
@@ -24,6 +28,16 @@ interface FounderVoiceGateProps {
   qualityScore?: number;
 }
 
+export type GateStatus =
+  | "ready-for-founder-review"
+  | "ready-for-wordpress"
+  | "needs-verification"
+  | "needs-safer-headline"
+  | "needs-source-credit"
+  | "social-not-ready"
+  | "visual-handoff-missing"
+  | "no-unsupported-claims";
+
 interface GateItem {
   id: string;
   label: string;
@@ -36,8 +50,8 @@ const GATE_ITEMS: GateItem[] = [
   {
     id: "source-confirmed",
     label: "Source is confirmed",
-    detail: "Every fact in the draft traces back to a named source or verified note. No unnamed 'insiders' without context.",
-    why: "Unverified sources create legal exposure and credibility risk. If you can't name it, flag it.",
+    detail: "Every fact in the draft traces back to a named source or verified note. No unnamed insiders without context.",
+    why: "Unverified sources create legal exposure and credibility risk. If you cannot name it, flag it.",
     icon: FileCheck,
   },
   {
@@ -57,20 +71,34 @@ const GATE_ITEMS: GateItem[] = [
   {
     id: "voice-matches-brand",
     label: "Voice matches the brand",
-    detail: `Reads like ${"{silo}"}, not generic copy. The tone, references, and cultural fluency fit the vertical.`,
+    detail: "Reads like {silo}, not generic copy. The tone, references, and cultural fluency fit the vertical.",
     why: "Each Haven brand has its own DNA. A hip-hop voice in a fitness article feels wrong, and vice versa.",
     icon: Mic,
   },
   {
+    id: "source-links-attached",
+    label: "Source links are attached",
+    detail: "At least one source URL is included so readers and editors can trace claims back to origin.",
+    why: "A story with no links is a story with no trail. If the link is missing, the package is not done.",
+    icon: Link2,
+  },
+  {
     id: "social-package-ready",
     label: "Social package is ready",
-    detail: "Social posts are written, platform-appropriate, and match the article's tone and facts.",
-    why: "Social is where the article lives or dies. If the posts aren't ready, the package isn't done.",
+    detail: "Social posts are written, platform-appropriate, and match the article tone and facts.",
+    why: "Social is where the article lives or dies. If the posts are not ready, the package is not done.",
     icon: Megaphone,
   },
   {
+    id: "visual-handoff-ready",
+    label: "Visual / edit handoff is ready",
+    detail: "WebArt brief or WebEdit cut notes are prepared so the visual team can move without guessing.",
+    why: "A text-only package forces the visual team to improvise. A brief takes five minutes and saves hours.",
+    icon: Newspaper,
+  },
+  {
     id: "export-package-clean",
-    label: "WordPress / export package is clean",
+    label: "WordPress export package is clean",
     detail: "The export has a title, body, excerpt, categories, and tags. No placeholder text or broken formatting.",
     why: "A messy export means manual cleanup in WordPress, which costs time and invites errors.",
     icon: Globe,
@@ -79,15 +107,15 @@ const GATE_ITEMS: GateItem[] = [
     id: "cultural-fluency",
     label: "Cultural fluency reads true",
     detail: "References, slang, and context match how the community actually talks. Not surface-level or performative.",
-    why: "Readers can tell when a writer doesn't know the culture. One fake reference loses them forever.",
+    why: "Readers can tell when a writer does not know the culture. One fake reference loses them forever.",
     icon: Eye,
   },
   {
     id: "no-generic-ai-phrasing",
     label: "No generic AI phrasing",
-    detail: "No 'in conclusion', 'delve', 'it's worth noting', or other AI tells. The writing sounds human.",
+    detail: "No 'in conclusion', 'delve', 'it is worth noting', or other AI tells. The writing sounds human.",
     why: "AI tells signal lazy work. Readers and editors catch them instantly, and they undercut everything else.",
-    icon: PenLine,
+    icon: Sparkles,
   },
 ];
 
@@ -114,6 +142,64 @@ function writeState(key: string | undefined, state: Record<string, boolean>) {
   }
 }
 
+export function gateStatus(
+  completed: number,
+  total: number,
+  hasOutput: boolean,
+  hasSocial: boolean,
+  hasVisual: boolean,
+): GateStatus {
+  if (completed === total) return "ready-for-wordpress";
+  if (completed >= total - 2 && hasOutput) return "ready-for-founder-review";
+  if (!hasSocial) return "social-not-ready";
+  if (!hasVisual) return "visual-handoff-missing";
+  if (completed < 4) return "needs-verification";
+  return "needs-source-credit";
+}
+
+const STATUS_LABELS: Record<GateStatus, { label: string; detail: string; color: string }> = {
+  "ready-for-wordpress": {
+    label: "Ready for WordPress Draft",
+    detail: "All quality checks passed. Export unlocked.",
+    color: "rgb(16 185 129)",
+  },
+  "ready-for-founder-review": {
+    label: "Ready for Founder Review",
+    detail: "Nearly complete. Founder can review and clear the final checks.",
+    color: "rgb(14 165 233)",
+  },
+  "needs-verification": {
+    label: "Needs More Verification",
+    detail: "Source coverage is too thin. Add confirmed facts before exporting.",
+    color: "rgb(244 63 94)",
+  },
+  "needs-safer-headline": {
+    label: "Needs Safer Headline",
+    detail: "The headline may overstate or create legal exposure. Rephrase before export.",
+    color: "rgb(245 158 11)",
+  },
+  "needs-source-credit": {
+    label: "Needs Source / Credit",
+    detail: "Missing source links or credit attribution. Add before export.",
+    color: "rgb(245 158 11)",
+  },
+  "social-not-ready": {
+    label: "Social Package Not Ready",
+    detail: "Social posts are not generated or reviewed. Complete the social package first.",
+    color: "rgb(168 85 247)",
+  },
+  "visual-handoff-missing": {
+    label: "Visual / Edit Handoff Missing",
+    detail: "No WebArt brief or WebEdit cut notes prepared. Add a visual handoff before export.",
+    color: "rgb(168 85 247)",
+  },
+  "no-unsupported-claims": {
+    label: "No Unsupported Claims",
+    detail: "One or more claims lack source confirmation. Verify or remove before export.",
+    color: "rgb(244 63 94)",
+  },
+};
+
 export function FounderVoiceGate({
   brandColor,
   onAccent,
@@ -127,6 +213,7 @@ export function FounderVoiceGate({
     readState(storageKey),
   );
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [showAllChecks, setShowAllChecks] = useState(false);
 
   const toggle = (id: string) => {
     setState((prev) => {
@@ -140,6 +227,9 @@ export function FounderVoiceGate({
   const total = GATE_ITEMS.length;
   const allPassed = completed === total;
   const progressPct = Math.round((completed / total) * 100);
+
+  const visibleItems = showAllChecks ? GATE_ITEMS : GATE_ITEMS.slice(0, 6);
+  const hiddenCount = total - visibleItems.length;
 
   return (
     <div
@@ -198,16 +288,29 @@ export function FounderVoiceGate({
         </div>
       </div>
 
-      {/* Progress bar */}
+      {/* Progress bar with score */}
       {!passed && (
-        <div className="mb-3 h-1.5 rounded-full bg-muted/30 overflow-hidden">
-          <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{
-              width: `${progressPct}%`,
-              background: allPassed ? brandColor : "rgb(245 158 11)",
-            }}
-          />
+        <div className="mb-3">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground/60">
+              Gate Progress
+            </span>
+            <span
+              className="text-[10px] font-black"
+              style={{ color: allPassed ? brandColor : "rgb(245 158 11)" }}
+            >
+              {progressPct}%
+            </span>
+          </div>
+          <div className="h-1.5 rounded-full bg-muted/30 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${progressPct}%`,
+                background: allPassed ? brandColor : "rgb(245 158 11)",
+              }}
+            />
+          </div>
         </div>
       )}
 
@@ -215,7 +318,7 @@ export function FounderVoiceGate({
       {!passed && (
         <>
           <div className="space-y-1 mb-3">
-            {GATE_ITEMS.map((item) => {
+            {visibleItems.map((item) => {
               const done = Boolean(state[item.id]);
               const isExpanded = expandedItem === item.id;
               const ItemIcon = item.icon;
@@ -227,19 +330,21 @@ export function FounderVoiceGate({
                     onDoubleClick={() => setExpandedItem(isExpanded ? null : item.id)}
                     data-testid={`founder-voice-gate-${item.id}`}
                     aria-pressed={done}
+                    aria-label={`${item.label}: ${done ? "checked" : "unchecked"}. Double-tap to see why this matters.`}
                     className="w-full flex items-start gap-2.5 text-left py-1.5 px-2 rounded-lg hover:bg-foreground/5 transition-colors"
                   >
                     {done ? (
                       <CheckCircle2
                         className="w-4 h-4 mt-0.5 shrink-0"
                         style={{ color: brandColor }}
+                        aria-hidden="true"
                       />
                     ) : (
-                      <Circle className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground/40" />
+                      <Circle className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground/40" aria-hidden="true" />
                     )}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
-                        <ItemIcon className={`w-3 h-3 shrink-0 ${done ? "text-foreground/40" : "text-muted-foreground/60"}`} />
+                        <ItemIcon className={`w-3 h-3 shrink-0 ${done ? "text-foreground/40" : "text-muted-foreground/60"}`} aria-hidden="true" />
                         <span
                           className={`text-[12px] font-bold ${done ? "text-foreground/50 line-through" : "text-foreground/90"}`}
                         >
@@ -266,6 +371,18 @@ export function FounderVoiceGate({
             })}
           </div>
 
+          {hiddenCount > 0 && !showAllChecks && (
+            <button
+              type="button"
+              onClick={() => setShowAllChecks(true)}
+              className="w-full text-center text-[10px] font-bold text-muted-foreground hover:text-foreground transition-colors py-1.5 mb-2 flex items-center justify-center gap-1"
+              aria-label={`Show ${hiddenCount} more quality checks`}
+            >
+              <ChevronDown className="w-3 h-3" />
+              Show {hiddenCount} more checks
+            </button>
+          )}
+
           <p className="text-[9px] text-muted-foreground/40 text-center mb-2">
             Double-tap any check to see why it matters
           </p>
@@ -276,6 +393,7 @@ export function FounderVoiceGate({
             onClick={onPass}
             disabled={!allPassed}
             data-testid="founder-voice-gate-unlock"
+            aria-label={allPassed ? "Unlock export — all quality checks passed" : `Check all ${total} items to unlock export`}
             className="w-full h-10 rounded-full font-black text-[12px] uppercase tracking-wider transition-all flex items-center justify-center gap-2"
             style={
               allPassed

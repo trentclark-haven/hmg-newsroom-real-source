@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FileText, TriangleAlert as AlertTriangle, Megaphone, PenTool, Sparkles, ChevronRight, Check, Lock, StickyNote, Compass, Database, WandSparkles, Share2, Send, ShieldCheck, Save, RotateCcw, ArrowRight } from "lucide-react";
+import { FileText, TriangleAlert as AlertTriangle, Megaphone, PenTool, Sparkles, ChevronRight, Check, Lock, StickyNote, Compass, Database, WandSparkles, Share2, Send, ShieldCheck, Save, RotateCcw, ArrowRight, ChevronDown, BookOpen, OctagonAlert as AlertOctagon, FileSearch, Hash, Palette, Scissors, Globe as GlobeIcon, Eye } from "lucide-react";
+import { getPlaybook, getAngleGuidance, type AngleType } from "@/lib/hmg/editorial/editorialPlaybooks";
 import { verticals } from "@/lib/mock-data";
 import { getBrandVoiceProfile } from "@/lib/hmg/brandVoiceProfiles";
 import { useDraft } from "@/lib/useDraft";
@@ -158,6 +159,217 @@ const STEPS: { id: FlowStep; label: string; icon: React.ComponentType<{ classNam
 
 function freshSections(): ResearchSection[] {
   return RESEARCH_SECTIONS.map((s) => ({ ...s, text: "" }));
+}
+
+function HmgStandardPanel({
+  brandId,
+  brandName,
+  accent,
+  mode,
+  articleType,
+  strength,
+  hasOutput,
+  voiceGatePassed,
+}: {
+  brandId: string;
+  brandName: string;
+  accent: string;
+  mode: string;
+  articleType: ArticleType;
+  strength: ArticleStrength | null;
+  hasOutput: boolean;
+  voiceGatePassed: boolean;
+}) {
+  const [expanded, setExpanded] = useState(true);
+  const playbook = useMemo(() => getPlaybook(brandId), [brandId]);
+  const angleKey = useMemo<AngleType>(() => {
+    if (mode === "breaking") return "breaking";
+    if (mode === "social") return "article";
+    const map: Partial<Record<ArticleType, AngleType>> = {
+      news: "breaking",
+      feature: "article",
+      review: "review",
+      analysis: "opinion",
+      explainer: "explainer",
+      "interview-recap": "interview",
+      list: "ranking",
+      opinion: "opinion",
+    };
+    return map[articleType] ?? "article";
+  }, [mode, articleType]);
+  const angle = useMemo(() => getAngleGuidance(angleKey), [angleKey]);
+
+  const publishReady = strength?.band === "strong" && hasOutput && voiceGatePassed;
+  const publishWarning = strength?.band === "weak" && hasOutput;
+  const needsVerification = strength?.signals.some((s) => s.band === "weak") ?? false;
+
+  return (
+    <div
+      className="rounded-xl border border-border/30 bg-card/30 overflow-hidden"
+      data-testid="hmg-standard-panel"
+    >
+      {/* Header — collapsible */}
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        aria-controls="hmg-standard-body"
+        className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-foreground/5 transition-colors"
+      >
+        <div className="flex items-center gap-2">
+          <BookOpen className="w-3.5 h-3.5 shrink-0" style={{ color: accent }} />
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: accent }}>
+            HMG Standard — {brandName}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          {publishReady && (
+            <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+              Ready
+            </span>
+          )}
+          {publishWarning && (
+            <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400">
+              Blocked
+            </span>
+          )}
+          <ChevronDown
+            className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${expanded ? "" : "-rotate-90"}`}
+          />
+        </div>
+      </button>
+
+      {expanded && (
+        <div id="hmg-standard-body" className="px-3 pb-3 space-y-2.5">
+          {/* Mission */}
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60 mb-0.5">Mission</p>
+            <p className="text-[11px] text-foreground/80 leading-snug">{playbook.editorialMission}</p>
+          </div>
+
+          {/* What great looks like */}
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60 mb-0.5">What Great Looks Like</p>
+            <p className="text-[11px] text-foreground/80 leading-snug">{playbook.whatGreatLooksLike}</p>
+          </div>
+
+          {/* Angle guidance */}
+          <div className="rounded-lg bg-foreground/[0.03] border border-border/20 p-2">
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60 mb-1 flex items-center gap-1">
+              <Compass className="w-3 h-3" /> Angle: {angleKey.replace("-", " ")}
+            </p>
+            <div className="space-y-1">
+              <p className="text-[10px] text-muted-foreground leading-snug">
+                <span className="font-bold text-foreground/70">Best for:</span> {angle.bestUseCase}
+              </p>
+              <p className="text-[10px] text-muted-foreground leading-snug">
+                <span className="font-bold text-foreground/70">Source level:</span>{" "}
+                <span className={angle.requiredSourceLevel === "confirmed" ? "text-emerald-600 dark:text-emerald-400" : angle.requiredSourceLevel === "unconfirmed" ? "text-rose-600 dark:text-rose-400" : "text-amber-600 dark:text-amber-400"}>
+                  {angle.requiredSourceLevel}
+                </span>
+              </p>
+              <p className="text-[10px] text-amber-600 dark:text-amber-400 leading-snug flex items-start gap-1">
+                <AlertOctagon className="w-3 h-3 mt-0.5 shrink-0" /> {angle.headlineWarning}
+              </p>
+              <p className="text-[10px] text-rose-600 dark:text-rose-400 leading-snug">
+                <span className="font-bold">Avoid:</span> {angle.whatToAvoid}
+              </p>
+              <p className="text-[10px] text-emerald-600 dark:text-emerald-400 leading-snug">
+                <span className="font-bold">Unlocks publish:</span> {angle.whatUnlocksPublish}
+              </p>
+            </div>
+          </div>
+
+          {/* Source standard */}
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60 mb-0.5 flex items-center gap-1">
+              <FileSearch className="w-3 h-3" /> Source Standard
+            </p>
+            <p className="text-[11px] text-muted-foreground leading-snug">{playbook.sourceDiscipline}</p>
+          </div>
+
+          {/* Headline standard */}
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60 mb-0.5 flex items-center gap-1">
+              <PenTool className="w-3 h-3" /> Headline Standard
+            </p>
+            <p className="text-[11px] text-muted-foreground leading-snug">{playbook.headlineStyle}</p>
+          </div>
+
+          {/* Social handoff standard */}
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60 mb-0.5 flex items-center gap-1">
+              <Megaphone className="w-3 h-3" /> Social Handoff
+            </p>
+            <p className="text-[11px] text-muted-foreground leading-snug">{playbook.socialTone}</p>
+          </div>
+
+          {/* Visual handoff standard */}
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60 mb-0.5 flex items-center gap-1">
+                <Palette className="w-3 h-3" /> WebArt
+              </p>
+              <p className="text-[10px] text-muted-foreground leading-snug">{playbook.webArtGuidance}</p>
+            </div>
+            <div>
+              <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60 mb-0.5 flex items-center gap-1">
+                <Scissors className="w-3 h-3" /> WebEdit
+              </p>
+              <p className="text-[10px] text-muted-foreground leading-snug">{playbook.webEditGuidance}</p>
+            </div>
+          </div>
+
+          {/* Founder review triggers */}
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/60 mb-0.5 flex items-center gap-1">
+              <Eye className="w-3 h-3" /> Founder Review Triggers
+            </p>
+            <ul className="space-y-0.5">
+              {playbook.founderReviewTriggers.map((trigger, i) => (
+                <li key={i} className="text-[10px] text-muted-foreground leading-snug flex items-start gap-1">
+                  <span className="text-amber-500 mt-0.5">•</span> {trigger}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Publish-readiness warning */}
+          {hasOutput && (
+            <div
+              className="rounded-lg border p-2 text-center"
+              style={{
+                borderColor: publishReady ? "rgb(16 185 129 / 0.3)" : publishWarning ? "rgb(244 63 94 / 0.3)" : "rgb(245 158 11 / 0.3)",
+                background: publishReady ? "rgb(16 185 129 / 0.05)" : publishWarning ? "rgb(244 63 94 / 0.05)" : "rgb(245 158 11 / 0.05)",
+              }}
+            >
+              <p
+                className="text-[10px] font-bold uppercase tracking-wider"
+                style={{
+                  color: publishReady ? "rgb(16 185 129)" : publishWarning ? "rgb(244 63 94)" : "rgb(245 158 11)",
+                }}
+              >
+                {publishReady
+                  ? "Ready for WordPress Draft"
+                  : publishWarning
+                    ? "Needs More Verification"
+                    : needsVerification
+                      ? "Needs Source / Credit"
+                      : "Social Package Not Ready"}
+              </p>
+              <p className="text-[9px] text-muted-foreground mt-0.5 leading-snug">
+                {publishReady
+                  ? "All quality checks passed. Export unlocked."
+                  : publishWarning
+                    ? "Source coverage is too thin. Add verified facts before exporting."
+                    : "Resolve weak signals above before attempting export."}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function EditorialBrain({
@@ -531,34 +743,17 @@ export function EditorialBrain({
         })}
       </div>
 
-      {/* Editorial DNA panel — brand-aware guidance */}
-      <div
-        className="rounded-xl border border-border/30 bg-card/30 p-3"
-        data-testid="editorial-dna-panel"
-      >
-        <div className="flex items-center gap-2 mb-1.5">
-          <Compass className="w-3.5 h-3.5 shrink-0" style={{ color: accent }} />
-          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: accent }}>
-            {brand?.name ?? "HMG"} Editorial DNA
-          </span>
-        </div>
-        {(() => {
-          const dna = EDITORIAL_DNA[brandId] ?? EDITORIAL_DNA.hmg;
-          return (
-            <div className="space-y-1">
-              <p className="text-[11px] text-muted-foreground leading-snug">{dna.what}</p>
-              <p className="text-[11px] text-foreground/80 leading-snug">{dna.great}</p>
-              <p className="text-[10px] text-muted-foreground/60 leading-snug">{dna.caution}</p>
-            </div>
-          );
-        })()}
-        {mode === "article" && (
-          <p className="text-[10px] text-muted-foreground/50 leading-snug mt-1.5 pt-1.5 border-t border-border/20">
-            <span className="font-bold">{ARTICLE_TYPE_OPTIONS.find((t) => t.id === articleType)?.label ?? articleType}:</span>{" "}
-            {ARTICLE_TYPE_GUIDANCE[articleType] ?? ""}
-          </p>
-        )}
-      </div>
+      {/* HMG Standard — premium editorial intelligence panel */}
+      <HmgStandardPanel
+        brandId={brandId}
+        brandName={brand?.name ?? "HMG"}
+        accent={accent}
+        mode={mode}
+        articleType={articleType}
+        strength={strength}
+        hasOutput={hasOutput}
+        voiceGatePassed={voiceGatePassed}
+      />
 
       {/* Step Content — only render the active step */}
       {activeStep === 1 && (

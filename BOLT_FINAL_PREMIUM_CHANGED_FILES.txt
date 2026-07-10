@@ -1,0 +1,88 @@
+BOLT FINAL PREMIUM EDITORIAL INTELLIGENCE — CHANGED FILES
+=========================================================
+
+NEW FILES CREATED:
+-----------------
+1. src/lib/hmg/editorial/editorialPlaybooks.ts
+   - Vertical editorial playbook system with 7 Haven silos
+   - 11 angle guidance types with source-level requirements
+   - Source discipline microcopy dictionary
+   - getPlaybook(), getAngleGuidance(), getSourceMicrocopy() exports
+
+MODIFIED FILES:
+---------------
+2. src/components/hmg/editorial/EditorialBrain.tsx
+   - Added import of getPlaybook, getAngleGuidance, AngleType from editorialPlaybooks
+   - Added import of new lucide icons (ChevronDown, BookOpen, AlertOctagon, FileSearch, Hash, Palette, Scissors, Globe, Eye)
+   - Replaced static EDITORIAL_DNA panel with dynamic HmgStandardPanel component
+   - HmgStandardPanel: collapsible, brand-aware, shows mission/great/source/headline/social/visual/founder-triggers/publish-readiness
+   - Angle guidance adapts to selected article type and mode
+   - Publish-readiness warning shows Ready/Blocked/Needs-Verification status
+
+3. src/components/hmg/editorial/FounderVoiceGate.tsx
+   - Complete rewrite from 3-check to 10-check final-boss editorial lock
+   - Premium checklist with expandable "why this matters" on double-tap
+   - Progress bar with percentage score
+   - Status labels: Ready for Founder Review, Ready for WordPress Draft, Needs More Verification, Needs Safer Headline, Needs Source/Credit, Social Package Not Ready, Visual/Edit Handoff Missing, No Unsupported Claims
+   - Aria labels and keyboard-safe toggle behavior
+   - localStorage persistence of check state
+   - Quality score badge support
+   - Show/hide for 6+4 check split
+
+4. src/components/newsroom/QuickLaunchView.tsx
+   - Complete rewrite with executive command energy
+   - "Today's Command Path" section: Start from notes, Start from media, Resume saved work, Prepare WordPress draft
+   - Fast Lane strip showing publishing path: Notes → Draft → Visual → Clip → Social → WordPress
+   - Status row: Editorial Desk ready, WordPress connection status, saved draft count
+   - Primary tiles: Breaking News + Article Draft with status pills
+   - Secondary tiles: WebArt, WebEdit, Social Pack, WordPress Draft with status pills
+   - Resume Last Draft tile with brand, time, and total draft count
+   - Hero line: "What are we shipping right now?"
+   - All tiles have clear next-step language and helper text
+   - Mobile-safe responsive grid (2-col on mobile, 4-col on desktop)
+   - No clipped copy, no decorative dead zones
+
+FILES NOT TO COPY:
+-----------------
+- Any file under src/components/ui/ (shadcn components, managed by full Replit source)
+- Any file under src/lib/ that is not explicitly listed above
+- package.json, tsconfig.json, vite.config.ts (managed by full Replit source)
+- Any file in src/components/newsroom/ other than QuickLaunchView.tsx
+
+KNOWN THIN-BRANCH STUBS TO IGNORE:
+----------------------------------
+- TS2307 "Cannot find module" errors for files not present in this Bolt environment:
+  @/components/ui/tabs, @/components/ui/separator, @/components/ui/sheet,
+  @/components/ui/skeleton, @/components/ui/tooltip, @/components/ui/input,
+  @/lib/mock-data, @/lib/safeStorage, @/lib/role, @/lib/safeMode,
+  @/components/ErrorBoundary, @/lib/hmg/recoveryCenter,
+  @/components/newsroom/SEOMasterView, @/components/newsroom/ClipBrandView,
+  @/components/newsroom/StationSchedulerView, @/components/newsroom/AIStaffView,
+  @/components/newsroom/CorpusView, @/components/newsroom/HavenAIControlCenter,
+  @/components/newsroom/SalesPipelineView, @/components/newsroom/AssignmentCenterView,
+  @/components/newsroom/AuditLogView, @/components/newsroom/RecoveryCenterView,
+  @/components/newsroom/HelpGuideView, @/components/newsroom/AICapabilityMatrixView,
+  @/components/newsroom/OperatorReadinessView, @/components/newsroom/HavenAIEngineView,
+  @/components/newsroom/MobileAppReadinessView, @/components/newsroom/SessionRecapView,
+  ./brandVoiceProfiles, ./sourcePackets, ./cachedFetch, ./trent-voice-profile,
+  ./auditLog, @/lib/hmg/haven-ai/types, ./types (in socialCampaignBrain)
+- TS7006 "Parameter implicitly has 'any'" errors downstream of missing modules
+- TS2322 "onNavigate not assignable" on Home.tsx lines 443/448 (pre-existing)
+- TS18046 "e is of type 'unknown'" in useFounderSession.ts (pre-existing)
+
+EXPECTED CONFLICTS:
+-------------------
+- EditorialBrain.tsx: If the full Replit source has a different version of the
+  EDITORIAL_DNA panel, the HmgStandardPanel replacement will conflict. Resolve
+  by keeping the HmgStandardPanel (it subsumes the old panel).
+- FounderVoiceGate.tsx: Full rewrite. If the full source has modifications,
+  prefer this version unless it adds props not present here.
+- QuickLaunchView.tsx: Full rewrite. If the full source has modifications,
+  prefer this version unless it adds props not present here.
+
+ROUTE/NAMING NOTES:
+-------------------
+- No new routes created. All views use existing View type from MenuOverlay.
+- editorialPlaybooks.ts is a pure data/utility module with no route impact.
+- HmgStandardPanel is an internal component, not exported from the index.
+- FounderVoiceGate exports gateStatus() and GateStatus type for external use.
