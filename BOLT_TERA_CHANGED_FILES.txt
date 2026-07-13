@@ -1,0 +1,66 @@
+BOLT TERA EDITORIAL AND PUBLISHING BUILD — CHANGED FILES MANIFEST
+================================================================
+
+NEW FILES CREATED:
+-----------------
+1. src/lib/hmg/editorial/editorialStages.ts
+   - 6-stage editorial workspace definitions (NOTES, ANGLE, SOURCES, DRAFT, PACKAGE, PUBLISH)
+   - Stage navigation helpers: nextStage, prevStage, stageIndex, isStageComplete
+   - EDITORIAL_STAGES array with label, hint, icon for each stage
+
+2. src/components/newsroom/WordPressPublishView.tsx
+   - Honest WordPress publish-preparation flow
+   - Brand selector, connected site status, article/visual/social package inputs
+   - SEO and metadata review, featured-image state, draft/publish readiness checklist
+   - Truthful blocked state when credentials missing
+   - Explicit confirmation before publishing
+   - Env var names shown (WP_URL, WP_USER, WP_APP_PASSWORD), never values
+   - Never simulates a successful connection
+
+3. src/components/newsroom/OutputHistoryView.tsx
+   - Full-page output history surface replacing the old sheet panel
+   - Filter by brand and content type
+   - Per-entry actions: Reopen, Copy, Continue in Editorial/WebArt/WebEdit/Social/WordPress
+   - Honest timestamps, search, export all as JSON
+   - entryToText() serializer for all 9 output kinds
+
+MODIFIED FILES:
+---------------
+4. src/lib/hmg/editorial/editorialPlaybooks.ts
+   - Added 5 new fields to EditorialPlaybook interface: knowledgeDomains, beatTopics, sourcingStandard, terminologyGuide, fluencyWarnings
+   - Populated all 7 verticals with deep knowledge domains, beat topics, sourcing standards, terminology guides, and fluency warnings
+
+5. src/lib/hmg/editorial/index.ts
+   - Added export of editorialStages.ts
+
+6. src/components/hmg/editorial/EditorialBrain.tsx
+   - Renamed 6 steps: Notes, Angle, Sources, Draft, Package, Publish
+   - Added ReadinessRail component (compact, not a dashboard)
+   - Readiness rail shows: Draft, Sources, Voice, Visual, Clip, Social, WP states
+   - Updated step 5 from "Social Pack" to "Package"
+   - Updated step 6 from "Export" to "Publish"
+   - Updated fast-lane strip labels to match new stage names
+   - Updated "Continue to Export" to "Continue to Publish"
+
+7. src/components/newsroom/SocialFactoryView.tsx (FULL REPLACEMENT)
+   - Replaced stacked giant intake boxes with compact source tray
+   - 4 source types: Article, WebArt, WebEdit, Output History
+   - One active source editor at a time
+   - Campaign composer with prompt, tone selector, CTA input
+   - Platform previews for Instagram, X, Facebook, YouTube, TikTok
+   - Each preview: caption, hashtags, alt text, CTA, character count
+   - Copy buttons per platform + copy all
+   - Save to Output History
+   - Draft persistence with recover/clear
+   - Safe Mode blocking
+   - No fake API calls — deterministic local builder
+
+FILES NOT TO COPY:
+-----------------
+- package.json, tsconfig.json, tsconfig.base.json, vite.config.ts
+- Any file under src/components/ui/
+- Any thin-branch stub
+- Any .bolt/, .env, .gitignore
+- Any markdown/doc file (reference only)
+- Home.tsx, MenuOverlay.tsx, QuickLaunchView.tsx (owned by other developers)
+- ArtBotView.tsx, CutMasterView.tsx (owned by Devin)

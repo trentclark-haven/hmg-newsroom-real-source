@@ -149,16 +149,98 @@ const SOURCE_DISCIPLINE_FIELDS = [
 type FlowStep = 1 | 2 | 3 | 4 | 5 | 6;
 
 const STEPS: { id: FlowStep; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: 1, label: "Drop Notes", icon: StickyNote },
-  { id: 2, label: "Pick Angle", icon: Compass },
-  { id: 3, label: "Add Sources", icon: Database },
-  { id: 4, label: "Generate Draft", icon: WandSparkles },
-  { id: 5, label: "Social Pack", icon: Share2 },
-  { id: 6, label: "Export", icon: Send },
+  { id: 1, label: "Notes", icon: StickyNote },
+  { id: 2, label: "Angle", icon: Compass },
+  { id: 3, label: "Sources", icon: Database },
+  { id: 4, label: "Draft", icon: WandSparkles },
+  { id: 5, label: "Package", icon: Share2 },
+  { id: 6, label: "Publish", icon: Send },
 ];
 
 function freshSections(): ResearchSection[] {
   return RESEARCH_SECTIONS.map((s) => ({ ...s, text: "" }));
+}
+
+type RailState = "empty" | "pending" | "ready" | "passed" | "weak" | "fair" | "strong" | "none";
+
+function railColor(state: RailState): string {
+  switch (state) {
+    case "ready":
+    case "passed":
+    case "strong":
+      return "#22C55E";
+    case "fair":
+      return "#F59E0B";
+    case "weak":
+    case "pending":
+    case "empty":
+    case "none":
+      return "#94A3B8";
+    default:
+      return "#94A3B8";
+  }
+}
+
+function ReadinessRail({
+  draftState,
+  sourceVerification,
+  founderVoice,
+  visualReadiness,
+  clipReadiness,
+  socialReadiness,
+  wordpressReadiness,
+  accent,
+}: {
+  draftState: RailState;
+  sourceVerification: RailState;
+  founderVoice: RailState;
+  visualReadiness: RailState;
+  clipReadiness: RailState;
+  socialReadiness: RailState;
+  wordpressReadiness: RailState;
+  accent: string;
+}) {
+  const items = [
+    { label: "Draft", state: draftState },
+    { label: "Sources", state: sourceVerification },
+    { label: "Voice", state: founderVoice },
+    { label: "Visual", state: visualReadiness },
+    { label: "Clip", state: clipReadiness },
+    { label: "Social", state: socialReadiness },
+    { label: "WP", state: wordpressReadiness },
+  ];
+  return (
+    <div
+      className="flex items-center gap-1.5 overflow-x-auto pb-1 rounded-xl border border-border/30 bg-card/20 px-3 py-2"
+      data-testid="readiness-rail"
+      aria-label="Editorial readiness rail"
+    >
+      <span className="text-[9px] font-black uppercase tracking-wider text-muted-foreground/50 shrink-0 mr-1">
+        Ready
+      </span>
+      {items.map((item) => {
+        const color = railColor(item.state);
+        return (
+          <span
+            key={item.label}
+            className="inline-flex items-center gap-1 shrink-0"
+            title={`${item.label}: ${item.state}`}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full shrink-0"
+              style={{ background: color }}
+            />
+            <span
+              className="text-[10px] font-bold"
+              style={{ color: item.state === "ready" || item.state === "passed" || item.state === "strong" ? color : "rgb(148 163 184 / 0.7)" }}
+            >
+              {item.label}
+            </span>
+          </span>
+        );
+      })}
+    </div>
+  );
 }
 
 function HmgStandardPanel({
@@ -698,9 +780,9 @@ export function EditorialBrain({
         <ArrowRight className="w-2.5 h-2.5" />
         <span>Draft</span>
         <ArrowRight className="w-2.5 h-2.5" />
-        <span>Social</span>
+        <span>Package</span>
         <ArrowRight className="w-2.5 h-2.5" />
-        <span>Export</span>
+        <span>Publish</span>
       </div>
 
       {/* Step Progress Bar */}
@@ -753,6 +835,18 @@ export function EditorialBrain({
         strength={strength}
         hasOutput={hasOutput}
         voiceGatePassed={voiceGatePassed}
+      />
+
+      {/* Readiness Rail — compact, not a dashboard */}
+      <ReadinessRail
+        draftState={hasOutput ? "ready" : "empty"}
+        sourceVerification={strength?.band ?? "none"}
+        founderVoice={voiceGatePassed ? "passed" : "pending"}
+        visualReadiness={articlePkg ? "ready" : "pending"}
+        clipReadiness={articlePkg ? "ready" : "pending"}
+        socialReadiness={socialPkg ? "ready" : "pending"}
+        wordpressReadiness={voiceGatePassed && articlePkg ? "ready" : "pending"}
+        accent={accent}
       />
 
       {/* Step Content — only render the active step */}
@@ -966,7 +1060,7 @@ export function EditorialBrain({
                 <SocialPostsCard pkg={socialPkg} accent={accent} onAccent={onAccent} />
               )}
 
-              {/* Continue to Social Pack — only for article mode */}
+              {/* Continue to Package — only for article mode */}
               {articlePkg && mode === "article" && (
                 <Button
                   type="button"
@@ -976,7 +1070,7 @@ export function EditorialBrain({
                   data-testid="editorial-continue-social"
                 >
                   <Share2 className="w-4 h-4 mr-1.5" />
-                  Continue to Social Pack
+                  Continue to Package
                 </Button>
               )}
 
@@ -1031,14 +1125,14 @@ export function EditorialBrain({
       )}
 
       {activeStep === 5 && (
-        <div className="space-y-3" data-testid="editorial-social-step">
+        <div className="space-y-3" data-testid="editorial-package-step">
           {socialPkg ? (
             <>
               <SocialPostsCard pkg={socialPkg} accent={accent} onAccent={onAccent} />
               <StepNav
                 onBack={() => setActiveStep(4)}
                 onNext={() => setActiveStep(6)}
-                nextLabel="Continue to Export"
+                nextLabel="Continue to Publish"
                 accent={accent}
                 onAccent={onAccent}
               />
@@ -1076,7 +1170,7 @@ export function EditorialBrain({
       )}
 
       {activeStep === 6 && (
-        <div className="space-y-3" data-testid="editorial-export-step">
+        <div className="space-y-3" data-testid="editorial-publish-step">
           {articlePkg && voiceGatePassed ? (
             <>
               <ArticlePackageCard pkg={articlePkg} accent={accent} onAccent={onAccent} strength={strength} />
@@ -1089,7 +1183,7 @@ export function EditorialBrain({
                   Quality Gate Passed
                 </p>
                 <p className="text-[11px] text-muted-foreground mt-1">
-                  Founder Voice check complete. Export your draft to WordPress or copy to clipboard.
+                  Founder Voice check complete. Prepare your WordPress draft or copy to clipboard.
                 </p>
               </div>
               {/* Handoff destinations */}
