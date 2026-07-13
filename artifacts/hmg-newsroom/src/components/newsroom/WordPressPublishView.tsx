@@ -2,13 +2,14 @@ import { useMemo, useState } from "react";
 import { verticals } from "@/lib/mock-data";
 import { useWPSettings } from "@/lib/useWPSettings";
 import { useDraft } from "@/lib/useDraft";
-import { recordOutput } from "@/lib/useOutputHistory";
+import { recordOutput, useOutputHistory } from "@/lib/useOutputHistory";
 import { recordSafeModeBlock, useSafeMode } from "@/lib/safeMode";
 import { Button } from "@/components/ui/button";
 import {
   AlertCircle,
   AlertTriangle,
   CheckCircle2,
+  Clock,
   FileText,
   Globe,
   Hash,
@@ -51,6 +52,8 @@ interface SeoPackage {
   slug: string;
   tags: string;
 }
+
+type EntryMode = "blank" | "from-editorial" | "from-history" | "resume-latest" | "paste-article";
 
 const EMPTY_ARTICLE: ArticlePackage = { headline: "", body: "" };
 const EMPTY_VISUAL: VisualPackage = { featuredImageUrl: "" };
@@ -180,6 +183,55 @@ export function WordPressPublishView({
     slug: string;
     createdAt: number;
   } | null>(null);
+
+  // Direct-entry mode selector
+  const [entryMode, setEntryMode] = useState<EntryMode>("blank");
+  const { entries: historyEntries } = useOutputHistory();
+
+  // Find latest WP draft from history for resume
+  const latestWpDraft = useMemo(() => {
+    const wpDrafts = historyEntries.filter((e) => e.kind === "wordpress-draft");
+    return wpDrafts.length > 0 ? wpDrafts[0] : null;
+  }, [historyEntries]);
+
+  // Find latest editorial article from history
+  const latestEditorial = useMemo(() => {
+    const articles = historyEntries.filter(
+      (e) => e.kind === "pack" || e.kind === "quick",
+    );
+    return articles.length > 0 ? articles[0] : null;
+  }, [historyEntries]);
+
+  function handleEntryModeChange(mode: EntryMode) {
+    setEntryMode(mode);
+    if (mode === "resume-latest" && latestWpDraft) {
+      const out = latestWpDraft.output as Record<string, unknown>;
+      const headline = (out.headline as string) || (out.title as string) || "";
+      const body = (out.bodyPreview as string) || (out.body as string) || "";
+      const slug = (out.slug as string) || "";
+      const seoTitle = (out.seoTitle as string) || "";
+      const metaDesc = (out.metaDescription as string) || "";
+      const tags = Array.isArray(out.tags) ? (out.tags as string[]).join(", ") : "";
+      const imgUrl = (out.featuredImageUrl as string) || "";
+      const social = (out.socialCaptions as string) || "";
+      setArticle({ headline, body });
+      setSeo({ seoTitle, metaDescription: metaDesc, slug, tags });
+      setVisual({ featuredImageUrl: imgUrl });
+      setSocial({ captions: social });
+      toast.success("Resumed latest WordPress draft from history.");
+    } else if (mode === "from-editorial" && latestEditorial) {
+      const out = latestEditorial.output as Record<string, unknown>;
+      const headline = (out.headline as string) || (out.title as string) || "";
+      const body = (out.body as string) || (out.bodyPreview as string) || (out.content as string) || "";
+      const slug = (out.slug as string) || "";
+      setArticle({ headline, body });
+      setSeo({ ...seo, slug });
+      toast.success("Imported latest editorial article from history.");
+    } else if (mode === "from-history") {
+      // Just scroll to history list — user picks
+      toast.info("Pick an entry from your history below to load it.");
+    }
+  }
 
   // Connection truth: creds must exist with a non-empty url AND user.
   const connected =
@@ -372,6 +424,78 @@ export function WordPressPublishView({
             prepare a draft for your connected WordPress site.
           </p>
         </div>
+      </div>
+
+      {/* Direct-entry mode selector */}
+      <div className="mb-3">
+        <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+          Start from
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {([
+            { id: "blank" as const, label: "Blank draft", disabled: false },
+            { id: "from-editorial" as const, label: "Import editorial draft", disabled: !latestEditorial },
+            { id: "from-history" as const, label: "From Output History", disabled: false },
+            { id: "resume-latest" as const, label: "Resume latest WP draft", disabled: !latestWpDraft },
+            { id: "paste-article" as const, label: "Paste article", disabled: false },
+          ]).map((opt) => (
+            <button
+              key={opt.id}
+              type="button"
+              disabled={opt.disabled}
+              onClick={() => handleEntryModeChange(opt.id)}
+              data-testid={`wp-publish-entry-${opt.id}`}
+              className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                entryMode === opt.id
+                  ? "border-transparent text-foreground"
+                  : "border-border/60 text-muted-foreground hover:text-foreground"
+              }`}
+              style={entryMode === opt.id ? { background: brand.bg, color: brand.on } : {}}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        {entryMode === "from-history" && (
+          <div className="mt-2 max-h-48 overflow-y-auto rounded-lg border border-border/40 bg-secondary/10 p-2 space-y-1">
+            {historyEntries.length === 0 ? (
+              <div className="text-[11px] text-muted-foreground text-center py-2">
+                No saved outputs yet. Generate content in other views first.
+              </div>
+            ) : (
+              historyEntries.slice(0, 20).map((entry) => (
+                <button
+                  key={entry.id}
+                  type="button"
+                  onClick={() => {
+                    const out = entry.output as Record<string, unknown>;
+                    setArticle({
+                      headline: (out.headline as string) || (out.title as string) || "",
+                      body: (out.body as string) || (out.bodyPreview as string) || (out.content as string) || "",
+                    });
+                    setSeo({
+                      seoTitle: (out.seoTitle as string) || "",
+                      metaDescription: (out.metaDescription as string) || "",
+                      slug: (out.slug as string) || "",
+                      tags: Array.isArray(out.tags) ? (out.tags as string[]).join(", ") : "",
+                    });
+                    setVisual({ featuredImageUrl: (out.featuredImageUrl as string) || "" });
+                    setSocial({ captions: (out.socialCaptions as string) || "" });
+                    toast.success("Loaded from Output History.");
+                  }}
+                  className="w-full text-left rounded-md px-2 py-1.5 hover:bg-secondary/40 transition-colors"
+                >
+                  <div className="text-[11px] font-semibold truncate">
+                    {(entry.output as Record<string, unknown>).headline as string || (entry.output as Record<string, unknown>).title as string || entry.prompt}
+                  </div>
+                  <div className="text-[9px] text-muted-foreground">
+                    {entry.siloName} · {entry.kind} · {new Date(entry.createdAt).toLocaleDateString()}
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+        )}
       </div>
 
       {/* Brand selector */}

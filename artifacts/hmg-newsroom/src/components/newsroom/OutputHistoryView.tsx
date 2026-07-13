@@ -9,7 +9,6 @@
 
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { CopyButton } from "@/components/hmg/CopyButton";
 import {
   useOutputHistory,
@@ -327,12 +326,11 @@ function EntryRow({ entry, onSelectView }: EntryRowProps) {
           >
             {entry.siloName}
           </span>
-          <Badge
-            variant="outline"
-            className="text-[10px] uppercase tracking-wider px-2 py-0"
+          <span
+            className="text-[10px] uppercase tracking-wider px-2 py-0 rounded border border-border/50"
           >
             {KIND_LABEL[entry.kind] ?? entry.kind}
-          </Badge>
+          </span>
         </div>
         <span className="text-[11px] text-muted-foreground shrink-0">
           {timestamp}

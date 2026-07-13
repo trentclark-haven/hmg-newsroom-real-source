@@ -1,0 +1,293 @@
+BOLT_TERA_PUBLIC_LANGUAGE_AUDIT.txt
+=====================================
+
+Audit of 8 source files for public-facing and internal language terms.
+
+Files audited:
+1. artifacts/hmg-newsroom/src/lib/hmg/editorial/editorialStages.ts
+2. artifacts/hmg-newsroom/src/components/newsroom/WordPressPublishView.tsx
+3. artifacts/hmg-newsroom/src/components/newsroom/OutputHistoryView.tsx
+4. artifacts/hmg-newsroom/src/lib/hmg/editorial/editorialPlaybooks.ts
+5. artifacts/hmg-newsroom/src/lib/hmg/editorial/index.ts
+6. artifacts/hmg-newsroom/src/components/hmg/editorial/EditorialBrain.tsx
+7. artifacts/hmg-newsroom/src/components/hmg/editorial/FounderVoiceGate.tsx
+8. artifacts/hmg-newsroom/src/components/newsroom/SocialFactoryView.tsx
+
+=====================================
+TERM: ArtBot
+=====================================
+
+File: OutputHistoryView.tsx
+  Line: 394
+  Context: onClick={() => onSelectView?.("artbot")} — navigation button labeled "WebArt" routes to "artbot"
+  User-facing: YES — the button label "WebArt" is user-facing; the route ID "artbot" is internal
+
+File: OutputHistoryView.tsx
+  Line: 569
+  Context: { label: "WebArt", icon: Brush, view: "artbot" } — empty-state action button
+  User-facing: YES — the label "WebArt" is user-facing; the route ID "artbot" is internal
+
+Status: Found in 1 file (OutputHistoryView.tsx), 2 occurrences.
+       Not found in the other 7 files.
+
+=====================================
+TERM: CutMaster
+=====================================
+
+File: OutputHistoryView.tsx
+  Line: 404
+  Context: onClick={() => onSelectView?.("cutmaster")} — navigation button labeled "WebEdit" routes to "cutmaster"
+  User-facing: YES — the button label "WebEdit" is user-facing; the route ID "cutmaster" is internal
+
+File: OutputHistoryView.tsx
+  Line: 570
+  Context: { label: "WebEdit", icon: Film, view: "cutmaster" } — empty-state action button
+  User-facing: YES — the label "WebEdit" is user-facing; the route ID "cutmaster" is internal
+
+Status: Found in 1 file (OutputHistoryView.tsx), 2 occurrences.
+       Not found in the other 7 files.
+
+=====================================
+TERM: provider
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: endpoint
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: fallback
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: API diagnostics
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: backend status
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: local-only / local only
+=====================================
+
+File: OutputHistoryView.tsx
+  Line: 124
+  Context: `Status: ${out.status ?? "draft"} — local only, no live publish`
+           — part of entryToText() serialization for wordpress-draft entries.
+           This text is displayed when a user copies or views a WordPress draft
+           entry from Output History.
+  User-facing: YES — this string appears in copied output text that users see.
+               The phrase "local only, no live publish" communicates to the user
+               that the draft was not published to WordPress.
+
+Status: Found in 1 file (OutputHistoryView.tsx), 1 occurrence.
+       Not found in the other 7 files.
+
+=====================================
+TERM: memory-backed
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: fake connector
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: route missing
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: contract ready
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: packet
+=====================================
+
+File: EditorialBrain.tsx
+  Line: 36
+  Context: import { formatBrandVoicePacket, ... } from "@/lib/hmg/intelligence"
+           — import of formatBrandVoicePacket function
+  User-facing: NO — internal import name only
+
+File: EditorialBrain.tsx
+  Line: 37
+  Context: import { formatFounderVoicePacket, ... } from "@/lib/hmg/intelligence"
+           — import of formatFounderVoicePacket function
+  User-facing: NO — internal import name only
+
+File: EditorialBrain.tsx
+  Line: 38
+  Context: import { generateSeoPacket, ... } from "@/lib/hmg/intelligence"
+           — import of generateSeoPacket function
+  User-facing: NO — internal import name only
+
+File: EditorialBrain.tsx
+  Line: 43
+  Context: type SeoPacket — type import
+  User-facing: NO — internal type name only
+
+File: EditorialBrain.tsx
+  Line: 1352
+  Context: const seoPacket: SeoPacket = useMemo(
+           () => generateSeoPacket(pkg.headline, pkg.headline, brand), ...)
+           — variable declaration for SEO packet
+  User-facing: NO — internal variable name
+
+File: EditorialBrain.tsx
+  Line: 1353
+  Context: () => generateSeoPacket(pkg.headline, pkg.headline, brand)
+           — function call
+  User-facing: NO — internal function call
+
+File: EditorialBrain.tsx
+  Line: 1389
+  Context: textToCopy={formatFounderVoicePacket()}
+           — CopyButton prop, copies "Founder Voice" summary to clipboard
+  User-facing: PARTIALLY — the button label "Founder Voice" is user-facing,
+               but "packet" is only in the function name, not displayed
+
+File: EditorialBrain.tsx
+  Line: 1395
+  Context: textToCopy={formatBrandVoicePacket(brand)}
+           — CopyButton prop, copies "Brand Voice" summary to clipboard
+  User-facing: PARTIALLY — the button label "Brand Voice" is user-facing,
+               but "packet" is only in the function name, not displayed
+
+File: EditorialBrain.tsx
+  Line: 1458
+  Context: {seoPacket.slug} · {seoPacket.readiness}/100 SEO readiness
+           — displayed in the Blueprint/SEO section of the Intelligence Scoring panel
+  User-facing: YES — the SEO readiness value is displayed to users,
+               but the word "packet" itself is not shown — only "seoPacket" as
+               a variable name in code
+
+Status: Found in 1 file (EditorialBrain.tsx), 8 occurrences.
+       All occurrences are internal variable/function/type names.
+       The word "packet" is never displayed to the user directly.
+       Not found in the other 7 files.
+
+=====================================
+TERM: engine
+=====================================
+
+File: index.ts (editorial/index.ts)
+  Line: 5
+  Context: export * from "./articleEngine.ts";
+           — re-export of the article engine module
+  User-facing: NO — internal module name
+
+File: index.ts (editorial/index.ts)
+  Line: 6
+  Context: export * from "./breakingEngine.ts";
+           — re-export of the breaking news engine module
+  User-facing: NO — internal module name
+
+File: index.ts (editorial/index.ts)
+  Line: 7
+  Context: export * from "./socialEngine.ts";
+           — re-export of the social engine module
+  User-facing: NO — internal module name
+
+Status: Found in 1 file (editorial/index.ts), 3 occurrences.
+       All occurrences are internal module/file names (articleEngine, breakingEngine, socialEngine).
+       The word "engine" is never displayed to the user.
+       Not found in the other 7 files.
+
+=====================================
+TERM: object URL
+=====================================
+
+File: OutputHistoryView.tsx
+  Line: 272
+  Context: const url = URL.createObjectURL(blob);
+           — creates a blob URL for JSON export download
+  User-facing: NO — internal browser API call, not visible to users.
+               The user sees a file download, not the URL itself.
+
+File: OutputHistoryView.tsx
+  Line: 279
+  Context: URL.revokeObjectURL(url);
+           — revokes the blob URL after download
+  User-facing: NO — internal cleanup, not visible to users
+
+Status: Found in 1 file (OutputHistoryView.tsx), 2 occurrences.
+       Both occurrences are internal browser API calls (createObjectURL / revokeObjectURL).
+       The term "object URL" is not displayed to the user.
+       Not found in the other 7 files.
+
+=====================================
+TERM: PWA
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: service worker
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+TERM: manifest
+=====================================
+
+Status: NOT FOUND in any of the 8 audited files.
+
+=====================================
+SUMMARY
+=====================================
+
+Terms found:
+  ArtBot          — 1 file, 2 occurrences (OutputHistoryView.tsx) — route IDs, internal
+  CutMaster       — 1 file, 2 occurrences (OutputHistoryView.tsx) — route IDs, internal
+  local only      — 1 file, 1 occurrence  (OutputHistoryView.tsx) — user-facing text
+  packet          — 1 file, 8 occurrences (EditorialBrain.tsx) — internal names
+  engine          — 1 file, 3 occurrences (editorial/index.ts) — internal module names
+  object URL      — 1 file, 2 occurrences (OutputHistoryView.tsx) — internal API calls
+
+Terms NOT found (0 occurrences across all 8 files):
+  provider
+  endpoint
+  fallback
+  API diagnostics
+  backend status
+  memory-backed
+  fake connector
+  route missing
+  contract ready
+  PWA
+  service worker
+  manifest
+
+User-facing terms of note:
+  - "local only, no live publish" (OutputHistoryView.tsx, line 124) — communicates
+    to the user that WordPress drafts are local-only and not live-published.
+    This is the only term from the audit list that is directly visible to end users
+    in a meaningful way (displayed in copied output text).
+
+  - "artbot" and "cutmaster" appear as route IDs in onSelectView calls, but the
+    user-facing labels are "WebArt" and "WebEdit" respectively. The route IDs
+    themselves are internal and not displayed to users.
+
+All other found terms ("packet", "engine", "object URL") are internal code-level
+names (variable names, function names, module names, browser API calls) that are
+never displayed to end users.

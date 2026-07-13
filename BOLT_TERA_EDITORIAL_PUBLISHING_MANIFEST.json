@@ -1,0 +1,97 @@
+{
+  "packageVersion": "1.0.0",
+  "packageName": "HMG Newsroom Bolt Tera Editorial and Publishing Build",
+  "createdAt": "2026-07-13T08:19:01.377910+00:00",
+  "sourceBranch": "bolt-tera-editorial-publishing",
+  "sourceFiles": [
+    {
+      "path": "artifacts/hmg-newsroom/src/lib/hmg/editorial/editorialStages.ts",
+      "repoPath": "src/lib/hmg/editorial/editorialStages.ts",
+      "operation": "CREATE",
+      "sha256": "d45aabe5fc3ed0880e45645233cd392703c2741f0dd676901fdbb0eaed2f1d28",
+      "sizeBytes": 2730
+    },
+    {
+      "path": "artifacts/hmg-newsroom/src/lib/hmg/editorial/editorialPlaybooks.ts",
+      "repoPath": "src/lib/hmg/editorial/editorialPlaybooks.ts",
+      "operation": "OVERWRITE",
+      "sha256": "df93044d0962558f8d01312a0fb3d56d3c7a286d280d9776d216e77d04098179",
+      "sizeBytes": 31300
+    },
+    {
+      "path": "artifacts/hmg-newsroom/src/lib/hmg/editorial/index.ts",
+      "repoPath": "src/lib/hmg/editorial/index.ts",
+      "operation": "OVERWRITE",
+      "sha256": "66ac41ad5139d4413bef35b419f39983c0ea2c2493b2ddb7c1149560fdbd07a4",
+      "sizeBytes": 350
+    },
+    {
+      "path": "artifacts/hmg-newsroom/src/components/hmg/editorial/EditorialBrain.tsx",
+      "repoPath": "src/components/hmg/editorial/EditorialBrain.tsx",
+      "operation": "OVERWRITE",
+      "sha256": "cff291cb31a9dac222913eaeadf205869c65db80523fa7f269a73df4dceb59c2",
+      "sizeBytes": 57688
+    },
+    {
+      "path": "artifacts/hmg-newsroom/src/components/hmg/editorial/FounderVoiceGate.tsx",
+      "repoPath": "src/components/hmg/editorial/FounderVoiceGate.tsx",
+      "operation": "OVERWRITE",
+      "sha256": "67f3ed1c3dc31986e77466ef68b12f1181acedcc7d0609c60ce5ed89b5e6b383",
+      "sizeBytes": 16786
+    },
+    {
+      "path": "artifacts/hmg-newsroom/src/components/newsroom/SocialFactoryView.tsx",
+      "repoPath": "src/components/newsroom/SocialFactoryView.tsx",
+      "operation": "OVERWRITE",
+      "sha256": "09f86dee6bc8b00cb531305f08ea0842ad8eebaf39ad6f960f251c16977e91b2",
+      "sizeBytes": 28257
+    },
+    {
+      "path": "artifacts/hmg-newsroom/src/components/newsroom/WordPressPublishView.tsx",
+      "repoPath": "src/components/newsroom/WordPressPublishView.tsx",
+      "operation": "CREATE",
+      "sha256": "e7253133a23897d3ba0ac496852ec683d1d278993e040af44c29f4d8b6da79bf",
+      "sizeBytes": 35138
+    },
+    {
+      "path": "artifacts/hmg-newsroom/src/components/newsroom/OutputHistoryView.tsx",
+      "repoPath": "src/components/newsroom/OutputHistoryView.tsx",
+      "operation": "CREATE",
+      "sha256": "be2167f096c89decddf942a1ed40f6643ae60436b0c6ac746b313fc998f0e81b",
+      "sizeBytes": 21087
+    }
+  ],
+  "protectedFiles": [
+    "src/components/newsroom/QuickLaunchView.tsx",
+    "src/components/newsroom/MenuOverlay.tsx",
+    "src/pages/Home.tsx",
+    "src/pages/FounderLogin.tsx",
+    "src/components/newsroom/ArtBotView.tsx",
+    "src/components/newsroom/CutMasterView.tsx",
+    "src/App.tsx",
+    "src/main.tsx",
+    "src/index.css",
+    "package.json",
+    "tsconfig.json",
+    "vite.config.ts"
+  ],
+  "requiredIntegrationActions": [
+    "Wire WordPressPublishView into Home.tsx routing (route ID: wp-publish)",
+    "Wire OutputHistoryView into Home.tsx routing (route ID: output-history)",
+    "SocialFactoryView and EditorialBrain use existing route IDs \u2014 no routing change needed"
+  ],
+  "knownLimitations": [
+    "SocialFactoryView replaces API call with local deterministic builder \u2014 restore fetch logic when full API is available",
+    "SocialFactoryView does not preserve FounderVoiceCheck component from old version",
+    "SocialFactoryView does not preserve JetFirePanel or NextActionBar from old version",
+    "446 pre-existing thin-branch TS errors from missing modules \u2014 NOT caused by this pass"
+  ],
+  "isolatedTestResults": {
+    "totalTests": 18,
+    "passed": 18,
+    "failed": 0,
+    "suites": 6,
+    "command": "npx tsx --test tests/bolt-tera-isolated.test.ts"
+  },
+  "fullBranchLimitationStatement": "The full thin branch cannot serve as a valid production build receipt because it lacks 100+ canonical files. The 446 TS errors are pre-existing thin-branch issues (TS2307 missing modules, TS7006 implicit-any from missing modules). Zero new errors were introduced by this pass. Isolated tests validate the self-contained logic independently."
+}

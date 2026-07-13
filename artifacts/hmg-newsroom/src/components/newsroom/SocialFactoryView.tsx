@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { verticals } from "@/lib/mock-data";
 import { type Silo as ApiSilo } from "@workspace/api-client-react";
-import { SiloPicker } from "./SiloPicker";
 import { CopyButton } from "@/components/hmg/CopyButton";
 import { recordOutput } from "@/lib/useOutputHistory";
 import { hasDraft, useDraft } from "@/lib/useDraft";
@@ -54,7 +53,7 @@ interface SocialDraft {
 /* Constants                                                           */
 /* ------------------------------------------------------------------ */
 
-const DRAFT_KEY = "hmg-socialfactory-draft-v2";
+const DRAFT_KEY = "hmg-socialfactory-draft-v1";
 
 const SOURCE_TYPES: {
   id: SourceType;
@@ -401,7 +400,22 @@ export function SocialFactoryView({
         </div>
       </div>
 
-      <SiloPicker value={draft.silo} onChange={setSilo} />
+      <div className="flex flex-wrap gap-1.5">
+              {verticals.map((v) => (
+                <button
+                  key={v.id}
+                  onClick={() => setSilo(v.id as ApiSilo)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    draft.silo === v.id
+                      ? "text-white shadow-md"
+                      : "bg-card/40 text-muted-foreground hover:bg-card/60"
+                  }`}
+                  style={draft.silo === v.id ? { background: v.color || "#0EA5E9" } : {}}
+                >
+                  {v.name}
+                </button>
+              ))}
+            </div>
 
       {/* Source tray */}
       <section className="mt-3 rounded-2xl border border-border/60 bg-card/45 p-3">
